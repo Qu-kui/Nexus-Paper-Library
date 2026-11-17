@@ -24,6 +24,16 @@ sync-github.cmd
 - SHA256：`5ff89c3d0e668d2122343f2f248f89417be0fa4b269ae581a88eeb3fd6dac7ef`
 - 校验清单：[SHA256SUMS.txt](release/SHA256SUMS.txt)
 
+## 上传新安装包
+
+`release/` 默认被忽略；发新版本后，手动把安装包加入仓库：
+
+```bat
+git add -f release\NPL-<版本>-Setup.exe release\SHA256SUMS.txt
+git commit -m "Add NPL <版本> installer"
+git push origin main
+```
+
 ## 不会上传的内容
 
 `.gitignore` 默认排除：
