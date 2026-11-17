@@ -8,7 +8,7 @@
 
 ## 安装
 
-**安装包**：双击 `release\NPL-<版本>-Setup.exe`，按向导选择安装目录；如果 NPL 正在运行，安装器会自动识别并关掉它再继续。装完自动启动，桌面和开始菜单都有快捷方式。
+**安装包**：[NPL-2.24.16-Setup.exe](release/NPL-2.24.16-Setup.exe)（GitHub 下载，58.4 MB）；也可以双击本地 `release\NPL-<版本>-Setup.exe`，按向导选择安装目录；如果 NPL 正在运行，安装器会自动识别并关掉它再继续。装完自动启动，桌面和开始菜单都有快捷方式。
 
 **便携版**：解压 `release\NPL-<版本>-win-x64-portable.zip`，双击 `PaperWhale.exe`（数据放在 exe 同目录 `data/`）。
 
