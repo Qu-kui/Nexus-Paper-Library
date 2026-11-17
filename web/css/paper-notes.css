@@ -1,0 +1,12 @@
+.paper-notes { min-width:0; overflow-wrap:anywhere; }
+.paper-notes-head { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.paper-notes h4 { margin:12px 0 8px; font-size:var(--fs-14); }
+.paper-notes [data-note-status] { line-height:var(--lh-body); }
+.paper-personal-notes { margin-bottom:16px; }
+.paper-imported-note { border:1px solid var(--line); border-radius:var(--radius-control); margin:10px 0; background:var(--surface); }
+.paper-imported-note summary { cursor:pointer; padding:10px 12px; color:var(--accent); font-size:var(--fs-13); font-weight:600; }
+.paper-note-body { padding:0 12px 12px; max-height:min(54vh,500px); overflow:auto; }
+.paper-note-compose { border-top:1px solid var(--line); margin-top:18px; padding-top:14px; }
+.paper-note-compose label { display:block; font-size:var(--fs-13); }
+.paper-note-compose textarea { display:block; width:100%; margin:8px 0; resize:vertical; min-height:80px; }
+.paper-note-compose > div { display:flex; align-items:center; justify-content:space-between; gap:8px; }

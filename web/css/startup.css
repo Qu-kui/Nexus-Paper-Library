@@ -1,0 +1,51 @@
+/* The approved lockup is a fixed brand surface, independent of the user's UI theme. */
+.npl-startup {
+  --startup-purple: #6e0342;
+  --startup-paper: #fff;
+  --startup-muted: #8e7c91;
+  --startup-mark: clamp(128px, 20vw, 240px);
+  --startup-copy: clamp(188px, 26vw, 304px);
+  --startup-gap: clamp(10px, 1.3vw, 16px);
+  --startup-width: calc(var(--startup-mark) + var(--startup-copy) + var(--startup-gap));
+  --startup-seam: calc(50% - var(--startup-width) / 2 + var(--startup-mark) * .488);
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  overflow: hidden;
+  isolation: isolate;
+  color: var(--startup-purple);
+  font-family: Arial, "Microsoft YaHei", sans-serif;
+}
+.desktop-shell .npl-startup { top: 36px; }
+.startup-curtain { position: absolute; top: 0; bottom: 0; background: var(--startup-paper); will-change: transform; }
+.startup-curtain-left { left: 0; width: calc(var(--startup-seam) + 1px); }
+.startup-curtain-right { right: 0; width: calc(100% - var(--startup-seam) + 1px); }
+.startup-stage {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex; align-items: center; gap: var(--startup-gap);
+  width: var(--startup-width);
+  pointer-events: none;
+}
+.startup-mark { width: var(--startup-mark); flex: none; will-change: transform; }
+.startup-mark svg { display: block; width: 100%; height: auto; overflow: visible; }
+.startup-mark path { transform-box: view-box; transform-origin: 48.8% 36.5%; will-change: transform, opacity; }
+.startup-mark [data-orbit], .startup-mark [data-outline] { will-change: stroke-dashoffset, opacity; }
+.startup-mark [data-orbit-head] { transform-box: view-box; transform-origin: 0 0; will-change: transform, opacity; }
+.startup-copy { width: var(--startup-copy); flex: none; will-change: transform; }
+.startup-wordmark { display: flex; font-size: clamp(68px, 8.7vw, 104px); font-weight: 900; line-height: .88; letter-spacing: -.055em; margin-left: -3px; }
+.startup-wordmark span { display: inline-block; will-change: transform, opacity; }
+.startup-fullname { white-space: nowrap; font-size: clamp(15px, 2.05vw, 24px); font-weight: 700; line-height: 1.35; margin-top: 7px; will-change: transform, opacity; }
+.startup-tagline { font-size: clamp(11px, 1.15vw, 14px); letter-spacing: .36em; color: var(--startup-muted); margin-top: 8px; white-space: nowrap; will-change: transform, opacity; }
+.startup-skip {
+  position: absolute; bottom: 26px; right: 30px;
+  color: #766879; background: #ffffffeb; border: 1px solid #e9e1e9;
+  padding: 7px 12px; border-radius: var(--radius-control);
+  font: var(--fs-12)/1.4 Arial, "Microsoft YaHei", sans-serif;
+  cursor: pointer;
+}
+.startup-skip:hover { color: var(--startup-purple); border-color: #cab6ca; }
+.startup-skip:focus-visible { outline: 2px solid var(--startup-purple); outline-offset: 3px; }
+.npl-startup[data-phase="opening"] .startup-skip { visibility: hidden; }
+@media (prefers-reduced-motion: reduce) { .npl-startup { display: none; } }

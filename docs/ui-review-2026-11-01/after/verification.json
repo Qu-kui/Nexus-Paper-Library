@@ -1,0 +1,50 @@
+{
+  "version": "2.7.55",
+  "checks": [
+    "metadata reuse / invalidation / manual refresh",
+    "compact missing PDF preview",
+    "compact pending methods and state filter",
+    "collapsed scholar setup",
+    "settings group navigation and unsaved changes",
+    "clipboard contrast in all 8 themes"
+  ],
+  "metadataRequests": {
+    "tags": 3,
+    "categories": 3
+  },
+  "contrastResults": [
+    {
+      "theme": "midnight",
+      "contrast": 16.34189832694071
+    },
+    {
+      "theme": "graphite",
+      "contrast": 15.781250234566343
+    },
+    {
+      "theme": "violet",
+      "contrast": 17.809035879590223
+    },
+    {
+      "theme": "paper",
+      "contrast": 15.29469429132877
+    },
+    {
+      "theme": "cream",
+      "contrast": 14.624129536726187
+    },
+    {
+      "theme": "celadon",
+      "contrast": 15.231410811637884
+    },
+    {
+      "theme": "sakura",
+      "contrast": 15.423526687077603
+    },
+    {
+      "theme": "daylight",
+      "contrast": 15.165720213103002
+    }
+  ],
+  "errors": []
+}

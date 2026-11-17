@@ -1,0 +1,37 @@
+.venv/
+data/
+build/
+dist/
+*.spec
+__pycache__/
+*.pyc
+.DS_Store
+tests/.smoke-data/
+tests/.demo-data/
+tests/.ai-check/
+
+# 发布产物：体积大，放 GitHub Releases，不进源码仓库
+release/
+
+# 构建/临时/日志
+*.log
+*.bak
+*.bak-*
+installer/version.txt
+tests/pdf-audit.*
+tests/pdf-oa.*
+tests/.tmp*
+tests/.mig-*
+tests/.pkg-*
+tests/.ui-*
+tests/.demo-*
+tests/.ai-check/
+tests/.smoke-data/
+tests/.env
+
+# 调试截图 / 本地个人数据 / 临时 Office 文件
+pw-debug/
+单词本/
+word/~$*
+tests/.sd-page/
+tests/.zotero-ref/

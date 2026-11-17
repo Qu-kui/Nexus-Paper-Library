@@ -1,0 +1,219 @@
+/* 使用说明弹层 —— 与主程序设计变量对齐（style.css 里的 --ink/--line/--accent 等） */
+
+.pw-guide-overlay[hidden] { display: none; }
+
+.pw-guide-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  background: rgba(7, 21, 35, .52);
+  backdrop-filter: blur(2px);
+}
+
+.pw-guide-sheet {
+  position: relative;
+  width: min(1040px, 100%);
+  height: min(84vh, 880px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: 0 24px 72px rgba(7, 21, 35, .32);
+}
+
+.pw-guide-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 20px;
+  background: #f8fafc;
+  border-bottom: 1px solid var(--line);
+}
+
+.pw-guide-toolbar span {
+  font-size: var(--fs-13);
+  color: var(--ink-3);
+}
+
+.pw-guide-toolbar button {
+  height: 32px;
+  padding: 0 16px;
+  margin-left: 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--fs-13);
+  cursor: pointer;
+}
+
+.pw-guide-toolbar button:hover { border-color: var(--accent); }
+
+.pw-guide-toolbar button.primary {
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+}
+
+.pw-guide-toolbar button:focus-visible,
+.pw-guide-toc a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.pw-guide-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--surface);
+}
+
+/* ---------- 文档 ---------- */
+
+.pw-guide {
+  display: grid;
+  grid-template-columns: 176px minmax(0, 1fr);
+  column-gap: 32px;
+  padding: 28px 40px 56px 32px;
+  font-size: var(--fs-14);
+  line-height: 1.7;
+  color: var(--ink);
+}
+
+.pw-guide-head {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding: 18px 20px;
+  border-radius: var(--radius-card);
+  color: #dbe7f3;
+  background: linear-gradient(150deg, #0b2136 0%, #0a1a2b 60%, #071523 100%);
+}
+
+.pw-guide-brand { display: flex; align-items: center; gap: 12px; }
+.pw-guide-logo { font-size: var(--fs-24); line-height: 1; }
+.pw-guide-logo img { display: block; }
+.pw-guide-head h1 { margin: 0; font-size: var(--fs-18); color: #fff; letter-spacing: .2px; }
+.pw-guide-head p { margin: 3px 0 0; font-size: var(--fs-12); color: #8fa9c2; }
+.pw-guide-version {
+  flex: 0 0 auto;
+  padding: 2px 10px;
+  font-size: var(--fs-12);
+  color: #a9bfd4;
+  border: 1px solid rgba(255, 255, 255, .18);
+  border-radius: var(--radius-pill);
+}
+
+.pw-guide-toc {
+  position: sticky;
+  top: 4px;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding-top: 2px;
+}
+
+.pw-guide-toc a {
+  padding: 5px 10px;
+  border-radius: var(--radius-control);
+  color: var(--ink-3);
+  font-size: var(--fs-13);
+  line-height: 1.5;
+  text-decoration: none;
+}
+
+.pw-guide-toc a:hover { background: var(--line-soft); color: var(--ink); }
+.pw-guide-toc a.active { background: var(--accent-soft); color: var(--accent-2); font-weight: 600; }
+
+.pw-guide-body { grid-column: 2; min-width: 0; max-width: 74ch; }
+
+.pw-guide section { margin-bottom: 26px; scroll-margin-top: 12px; }
+
+.pw-guide h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 2px 0 10px;
+  font-size: var(--fs-16);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.pw-guide h2::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 3px;
+  height: 15px;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+}
+
+.pw-guide h3 {
+  margin: 16px 0 6px;
+  font-size: var(--fs-14);
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.pw-guide p { margin: 8px 0; color: var(--ink-2); }
+
+.pw-guide ul,
+.pw-guide ol {
+  margin: 8px 0;
+  padding-left: 20px;
+  color: var(--ink-2);
+}
+
+.pw-guide li { margin: 5px 0; }
+.pw-guide li::marker { color: var(--accent); }
+.pw-guide strong { color: var(--ink); }
+
+.pw-guide code {
+  padding: 1px 6px;
+  border-radius: var(--radius-chip);
+  background: var(--line-soft);
+  color: #0b4f55;
+  font-family: var(--mono);
+  font-size: .92em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.pw-guide dt { margin-top: 12px; font-weight: 600; color: var(--ink); }
+.pw-guide dd { margin: 2px 0 0; color: var(--ink-3); font-size: var(--fs-13); }
+
+.pw-note {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-control);
+  border: 1px solid #f3e2c4;
+  background: #fffaf0;
+  color: #7a5a1e;
+  font-size: var(--fs-13);
+}
+
+.pw-guide-foot {
+  margin-top: 8px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.pw-guide-foot p { margin: 0; font-size: var(--fs-12); color: var(--ink-3); }
+
+@media (max-width: 820px) {
+  .pw-guide { grid-template-columns: 1fr; padding: 20px; row-gap: 18px; }
+  .pw-guide-toc { position: static; flex-direction: row; flex-wrap: wrap; }
+  .pw-guide-body { grid-column: 1; max-width: none; }
+}

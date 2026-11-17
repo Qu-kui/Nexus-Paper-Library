@@ -1,0 +1,66 @@
+/* Actual file imports, then read and append the migrated notes in both UI surfaces. */
+import assert from 'node:assert/strict';
+import {spawn} from 'node:child_process';
+import {mkdtempSync,rmSync,mkdirSync,writeFileSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {resolve,dirname,join,sep} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {createRequire} from 'node:module';
+import net from 'node:net';
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+const deps=process.env.PAPERWHALE_NODE_MODULES || 'C:/Users/10498/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules';
+const {chromium}=createRequire(join(deps,'package.json'))('playwright');
+const temp=mkdtempSync(join(tmpdir(),'npl-notes-ui-'));
+const socket=net.createServer();await new Promise(r=>socket.listen(0,'127.0.0.1',r));const port=socket.address().port;await new Promise(r=>socket.close(r));const base=`http://127.0.0.1:${port}`;
+const server=spawn(join(root,'.venv/Scripts/python.exe'),[join(root,'tests/ai_ui_server.py'),String(port)],{cwd:root,windowsHide:true,env:{...process.env,PAPERWHALE_UI_TEST:'1',PAPERWHALE_DATA:temp,PAPERWHALE_LLM_MOCK:'1'},stdio:['ignore','pipe','pipe']});
+let browser,logs='';server.stdout.on('data',v=>logs+=v);server.stderr.on('data',v=>logs+=v);
+const output=join(root,'pw-debug/imported-notes');mkdirSync(output,{recursive:true});
+try {
+  let ready=false;for(let i=0;i<100;i++){try{ready=(await fetch(base+'/api/health')).ok;}catch{}if(ready)break;await new Promise(r=>setTimeout(r,100));}assert.ok(ready,logs);
+  const xml=join(temp,'notes.xml');writeFileSync(xml,'<xml><records><record><titles><title>ALPHA optics study</title></titles><notes><![CDATA[<h2>EndNote 旧笔记</h2><p>第一段 <b>核心方法</b></p><p>第二段</p>]]></notes><research-notes>共同内容</research-notes></record></records></xml>');
+  const rdf=join(temp,'notes.rdf');writeFileSync(rdf,`<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:z="http://www.zotero.org/namespaces/export#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:bib="http://purl.org/net/biblio#"><bib:Article rdf:about="#p"><z:itemType>journalArticle</z:itemType><dc:title>ALPHA optics study</dc:title><dcterms:isReferencedBy rdf:resource="#n1"/><dcterms:isReferencedBy rdf:resource="#n2"/></bib:Article><bib:Memo rdf:about="#n1"><rdf:value>共同内容</rdf:value></bib:Memo><bib:Memo rdf:about="#n2"><rdf:value><![CDATA[<p>Zotero 阅读心得</p><ul><li>研究意义</li><li>局限性</li></ul><script>window.injected=true</script><img src="https://example.com/tracker.png" alt="原图"/>]]></rdf:value></bib:Memo></rdf:RDF>`);
+  await fetch(base+'/api/papers/a/notes/append',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:'程序里的原笔记'})});
+  browser=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:true});
+  const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[],external=[],checks=[];
+  page.on('pageerror',e=>errors.push(e.stack||e.message));page.on('request',r=>{if(!r.url().startsWith(base)&&!r.url().startsWith('data:')&&!r.url().startsWith('blob:'))external.push(r.url());});
+  await page.addInitScript(()=>localStorage.setItem('pw-setup-dismissed','1'));
+  await page.goto(base);await page.waitForFunction(()=>window.PW?.goto);
+  await page.locator('.nav-item[data-page="import"]').click();await page.locator('#endnote-path').fill(xml);await page.locator('#btn-import-endnote').click();
+  await page.waitForFunction(()=>document.querySelector('#endnote-result').textContent.includes('已保留 2 条笔记'));
+  assert.match(await page.locator('#endnote-result').textContent(),/新增 0 篇/);checks.push('EndNote notes enrich an existing paper through the real import panel');
+  await page.locator('#zotero-file').setInputFiles(rdf);
+  await page.waitForFunction(()=>document.querySelector('#zotero-file-result').textContent.includes('已保留笔记 1 条'));
+  assert.match(await page.locator('#zotero-file-result').textContent(),/相同笔记 1 条/);
+  await page.locator('#zotero-file').setInputFiles(rdf);
+  await page.waitForFunction(()=>document.querySelector('#zotero-file-result').textContent.includes('相同笔记 2 条'));
+  assert.equal((await(await fetch(base+'/api/papers/a/notes')).json()).imported.length,3);checks.push('Zotero linked notes, repeated and cross-format deduplication');
+  await page.evaluate(()=>window.PW.openPaperDetail('a'));
+  const detail=page.locator('#detail-paper-notes');await detail.getByText('Zotero 阅读心得',{exact:true}).waitFor();
+  assert.ok(await detail.getByText('程序里的原笔记',{exact:true}).count());assert.ok(await detail.locator('strong').filter({hasText:'核心方法'}).count());
+  assert.equal(await page.evaluate(()=>window.injected),undefined);assert.deepEqual(external,[]);
+  await detail.scrollIntoViewIfNeeded();await page.screenshot({animations:'disabled',path:join(output,'detail.png')});
+  await detail.locator('textarea').fill('新的阅读想法');await detail.getByRole('button',{name:'保存追加笔记'}).click();
+  await detail.getByText('新的阅读想法',{exact:true}).waitFor();assert.equal(await detail.locator('textarea').inputValue(),'');checks.push('detail displays sources, paragraphs and formatting; append preserves old notes; no scripts or remote images');
+  await page.evaluate(()=>window.PW.openPaper('a'));await page.waitForFunction(()=>window.PW.readerState?.doc);
+  await page.locator('#reader-tabs [data-tab="paper-notes"]').click();
+  const reader=page.locator('#reader-paper-notes');await reader.getByText('Zotero 阅读心得',{exact:true}).waitFor();
+  await reader.getByText('新的阅读想法',{exact:true}).waitFor();
+  await page.screenshot({animations:'disabled',path:join(output,'reader.png')});
+  await reader.locator('textarea').fill('A 尚未保存的草稿');
+  await page.evaluate(()=>window.PW.openPaper('b'));await page.waitForFunction(()=>window.PW.readerState?.paperId==='b' && window.PW.readerState?.doc);
+  await page.locator('#reader-tabs [data-tab="paper-notes"]').click();await page.waitForFunction(()=>document.querySelector('#reader-paper-notes [data-note-status]')?.textContent.includes('迁移笔记会'));
+  assert.doesNotMatch(await reader.textContent(),/Zotero 阅读心得|程序里的原笔记/);assert.equal(await reader.locator('textarea').inputValue(),'');
+  await page.evaluate(()=>window.PW.openPaper('a'));await page.waitForFunction(()=>window.PW.readerState?.paperId==='a' && window.PW.readerState?.doc);
+  await page.locator('#reader-tabs [data-tab="paper-notes"]').click();await reader.getByText('Zotero 阅读心得',{exact:true}).waitFor();
+  assert.equal(await reader.locator('textarea').inputValue(),'A 尚未保存的草稿');
+  await page.setViewportSize({width:1040,height:700});await page.screenshot({animations:'disabled',path:join(output,'reader-1040.png')});checks.push('reader has a separate notes tab; drafts and content stay attached to their own paper');
+  await page.route('**/api/papers/b/notes',route=>route.abort());
+  await page.evaluate(()=>window.PW.openPaper('b'));await page.waitForFunction(()=>window.PW.readerState?.paperId==='b' && window.PW.readerState?.doc);
+  await page.locator('#reader-tabs [data-tab="paper-notes"]').click();await page.waitForFunction(()=>document.querySelector('#reader-paper-notes [data-note-status]')?.textContent.includes('读取失败'));
+  await page.unroute('**/api/papers/b/notes');await reader.getByRole('button',{name:'刷新笔记'}).click();
+  await page.waitForFunction(()=>document.querySelector('#reader-paper-notes [data-note-status]')?.textContent.includes('迁移笔记会'));checks.push('failed note reads are explicit and retryable');
+  assert.deepEqual(errors,[]);writeFileSync(join(output,'checks.json'),JSON.stringify({checks,errors},null,2));console.log(JSON.stringify({checks,errors},null,2));
+} finally {
+  await browser?.close();if(server.exitCode===null){const exited=new Promise(r=>server.once('exit',r));server.kill();await exited;}
+  const absolute=resolve(temp);if(!absolute.startsWith(resolve(tmpdir())+sep)||!absolute.split(sep).at(-1).startsWith('npl-notes-ui-'))throw Error('Unexpected temporary data directory');rmSync(absolute,{recursive:true,force:true});
+}

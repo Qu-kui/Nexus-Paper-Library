@@ -1,0 +1,23 @@
+NPL Connector 安装说明
+================================
+
+支持 Microsoft Edge 和 Google Chrome（Chromium 内核）。
+
+【Edge 安装】
+1. 先启动 NPL 桌面程序。
+2. 双击本文件夹里的「安装到Edge.cmd」，会打开 edge://extensions 并弹出本文件夹。
+   也可以手动在 Edge 地址栏输入：edge://extensions
+3. 打开右下角「开发人员模式」。
+4. 点「加载解压缩的扩展」，选择本文件夹（包含 manifest.json 的这一层）。
+5. 打开任意论文网页，点 Edge 工具栏的 NPL 图标，确认信息后「保存到 NPL」。
+
+【Chrome 安装】
+同上，把 edge://extensions 换成 chrome://extensions，或双击「安装到Chrome.cmd」。
+
+【单独下载的 Connector.zip】
+解压后得到 NPL-Connector 文件夹，加载这个文件夹即可。
+
+【说明】
+- 不需要上架商店，免审核；Edge/Chrome 都支持「加载解压缩的扩展」。
+- 插件只连接本机 127.0.0.1，不会把数据发到外部服务器。
+- 保存时能抓到 PDF 就一起抓；抓不到就只存网页信息。

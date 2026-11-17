@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "PW Referer Probe (实验用)",
+  "version": "0.0.1",
+  "description": "只验证 chrome.downloads 会不会发 Referer；不读写 PaperWhale 数据，不上传任何东西。",
+  "permissions": ["downloads"],
+  "host_permissions": ["http://127.0.0.1:8799/*"],
+  "action": {
+    "default_title": "PW Referer Probe",
+    "default_popup": "popup.html"
+  }
+}

@@ -1,0 +1,9 @@
+# NPL 选定方案
+
+2026-11-02。名称已确认：Nexus Paper Library（NPL）。用户选择 `exec-49dc2d8a-f4ad-482a-be92-78de73966ca8.png` 的方案，要求只把右下 L 底边延长至与右端面对齐。
+
+`npl-brand-board.png` 为该局部调整后的 PNG 展示图，主标志、反白应用图和右下单色示意同步延长 L 底边。使用内置 image_gen 编辑；没有修改原始生成图或更换软件现有资源。此文件是栅格展示稿，不是矢量源文件。
+
+## 最终编辑提示词
+
+Use case: precise-object-edit / logo-brand. Perform exactly ONE small geometric correction to THIS supplied identity board. Preserve the selected logo, all text, font, colors, page wings, N and P shapes, central negative spaces, background, divider lines, footer, composition and image proportions. DO NOT redesign or simplify anything. In each occurrence of the book/NP monogram symbol, the lower-right L-shaped foot currently ends too early. Extend ONLY that short lower-right foot along its existing upward-right isometric direction, preserving its EXACT existing thickness and slope, until its right terminal edge is vertically aligned with the symbol's outermost right face edge. In the large upper-left symbol, the short foot ends near x610 but the outer right face reaches near x700 in this 1536px-wide reference: extend that foot to the same x700 outer-right boundary; do NOT extend past that boundary. Continue BOTH parallel edges of the foot along their existing slopes; close the extended foot with the same vertical terminal cut. Keep the broad white gap between the P face above and L foot below, do not fill it in or join the two bars at the right. Apply this identical proportional correction to the two smaller logo examples below, including the white reverse logo inside the purple app tile and the purple standalone logo at bottom right. No modifications to the large typeset 'NPL' wordmark or any other letters. No new shapes or added text. Everything outside these three tiny foot-extension regions must remain visually identical to the reference. Output the same finished landscape identity board.

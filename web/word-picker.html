@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>添加引注 · NPL</title>
+<link rel="icon" href="/brand/npl.ico">
+<link rel="stylesheet" href="/css/tokens.css">
+<script>
+  try {
+    var cachedLook = JSON.parse(localStorage.getItem("pw.appearance.vars") || localStorage.getItem("pw.accent.vars") || "null");
+    if (cachedLook) { var rootStyle = document.documentElement.style; for (var key in cachedLook) rootStyle.setProperty(key, cachedLook[key]); }
+  } catch (error) { /* 忽略损坏的本地缓存 */ }
+</script>
+<link rel="stylesheet" href="/css/word-picker.css">
+</head>
+<body>
+<div class="wp-app">
+  <header class="wp-head">
+    <div class="wp-brand">
+      <span class="wp-logo"><img src="/brand/npl-app.svg" alt="NPL" width="28" height="28"></span>
+      <div>
+        <strong>添加引注</strong>
+        <span class="wp-sub">NPL · 从文献库选择，插入到 Word</span>
+      </div>
+    </div>
+    <div class="wp-count" id="head-count"></div>
+  </header>
+
+  <div class="wp-body">
+    <aside class="wp-side">
+      <div class="wp-side-title">我的文库</div>
+      <nav class="wp-tree" id="tree" role="tree" aria-label="分类"></nav>
+    </aside>
+
+    <main class="wp-main">
+      <div class="wp-searchbar">
+        <input id="q" type="search" placeholder="搜索标题、作者、期刊或 DOI" autocomplete="off" autofocus>
+        <button id="clear" class="wp-ghost" title="清空搜索">✕</button>
+      </div>
+
+      <div class="wp-table" role="grid">
+        <div class="wp-thead" role="row">
+          <span class="c-title">标题</span>
+          <span class="c-author">作者</span>
+          <span class="c-year">年份</span>
+          <span class="c-venue">期刊</span>
+        </div>
+        <div class="wp-rows" id="rows" role="rowgroup" tabindex="0"></div>
+      </div>
+
+      <footer class="wp-foot">
+        <span class="wp-status" id="status">正在加载…</span>
+        <div class="wp-actions">
+          <span class="wp-hint" id="hint">Ctrl / Shift 多选 · 双击直接插入 · Enter 插入 · Esc 取消</span>
+          <button id="cancel" class="wp-btn">取消</button>
+          <button id="insert" class="wp-btn wp-primary" disabled>插入引文</button>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+<script src="/js/word-picker.js"></script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+/* 剪贴板提示 + 参考文献外扩（Chief 维护） */
+
+/* ---------- 剪贴板提示 ---------- */
+.clipboard-prompt {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  z-index: 9400;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: min(560px, calc(100vw - 36px));
+  padding: 10px 12px 10px 14px;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--shell-line-strong);
+  background: var(--shell-bg);
+  color: var(--shell-text-strong);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(10px);
+}
+
+.clipboard-prompt.hidden { display: none; }
+
+.clipboard-prompt .cp-text {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.clipboard-prompt .cp-text b {
+  flex: none;
+  font-size: var(--fs-11);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--shell-text-strong);
+}
+
+.clipboard-prompt .cp-text span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--fs-13);
+}
+
+.clipboard-prompt .cp-text em { flex: none; font-style: normal; color: var(--shell-text); }
+.clipboard-prompt .cp-actions .btn:not(.primary) { color: var(--shell-text); border-color: var(--shell-line-strong); background: var(--shell-hover); }
+.clipboard-prompt .cp-actions .btn:not(.primary):hover { background: var(--shell-hover-strong); color: var(--shell-text-strong); }
+.clipboard-prompt .cp-actions .icon-btn { color: var(--shell-text); }
+
+.clipboard-prompt .cp-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+}
+
+/* ---------- 参考文献外扩 ---------- */
+.reference-tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.reference-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 46vh;
+  overflow: auto;
+  margin: 8px 0 14px;
+  padding-right: 4px;
+}
+
+.reference-item {
+  display: grid;
+  grid-template-columns: 18px 1fr auto;
+  gap: 10px;
+  align-items: start;
+  padding: 8px 10px;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.reference-item.in-library { opacity: 0.58; }
+
+.reference-item .rp-title {
+  font-size: var(--fs-13);
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.reference-item .rp-meta {
+  font-size: var(--fs-12);
+  opacity: 0.66;
+  margin-top: 2px;
+}
+
+.reference-item .rp-flag {
+  font-size: var(--fs-11);
+  white-space: nowrap;
+  padding: 1px 7px;
+  border-radius: var(--radius-pill);
+  border: 1px solid #cfe9e6;
+  color: var(--accent);
+  align-self: center;
+}

@@ -1,0 +1,112 @@
+{
+  "syntheticFixture": true,
+  "viewport": {
+    "width": 1500,
+    "height": 1000
+  },
+  "library": {
+    "total": 233,
+    "displayed": 50,
+    "heading": "共 233 篇 · 显示 1–50 · 单击详情，双击阅读",
+    "bodyScrollWidth": 1500,
+    "viewport": 1500,
+    "unlabeledInputs": 0
+  },
+  "filteredEmpty": "🐋\n没找到匹配的论文\n\n换个关键词，或者在工具栏里清空分类 / 标签筛选。\n\n清空筛选",
+  "settings": {
+    "cards": 6,
+    "topScroll": 0,
+    "scrollHeight": 1000
+  },
+  "reopenedPage": 1,
+  "smallReader": {
+    "viewport": 1100,
+    "scrollWidth": 1100,
+    "pdfWidth": 662,
+    "chatWidth": 393
+  },
+  "modal": {
+    "role": "dialog",
+    "ariaModal": "true",
+    "focusEscapes": false,
+    "focusSequence": [
+      {
+        "id": "profile-chat-send",
+        "inside": true
+      },
+      {
+        "id": "profile-chat-attach",
+        "inside": true
+      },
+      {
+        "id": "profile-chat-clear",
+        "inside": true
+      },
+      {
+        "id": "profile-chat-close",
+        "inside": true
+      },
+      {
+        "id": "",
+        "inside": true
+      },
+      {
+        "id": "profile-chat-input",
+        "inside": true
+      },
+      {
+        "id": "profile-chat-send",
+        "inside": true
+      },
+      {
+        "id": "profile-chat-attach",
+        "inside": true
+      },
+      {
+        "id": "profile-chat-clear",
+        "inside": true
+      },
+      {
+        "id": "profile-chat-close",
+        "inside": true
+      },
+      {
+        "id": "",
+        "inside": true
+      },
+      {
+        "id": "profile-chat-input",
+        "inside": true
+      },
+      {
+        "id": "profile-chat-send",
+        "inside": true
+      },
+      {
+        "id": "profile-chat-attach",
+        "inside": true
+      },
+      {
+        "id": "profile-chat-clear",
+        "inside": true
+      },
+      {
+        "id": "profile-chat-close",
+        "inside": true
+      },
+      {
+        "id": "",
+        "inside": true
+      },
+      {
+        "id": "profile-chat-input",
+        "inside": true
+      }
+    ]
+  },
+  "brokenFile": {
+    "has_pdf": false,
+    "status": "indexed"
+  },
+  "errors": []
+}

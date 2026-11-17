@@ -1,0 +1,31 @@
+{
+  "fixture": true,
+  "version": "2.7.54",
+  "settings": {
+    "cards": 9,
+    "mainHeight": 1000,
+    "mainScrollHeight": 1000
+  },
+  "reader": {
+    "bodyWidth": 1100,
+    "viewport": 1100,
+    "pdfWidth": 662
+  },
+  "readerKeyboard": {
+    "before": "summary",
+    "after": "relevance",
+    "labels": [
+      "AI 精读",
+      "论文对话",
+      "与我相关",
+      "目录",
+      "批注"
+    ]
+  },
+  "clipboard": {
+    "background": "rgba(18, 26, 34, 0.94)",
+    "title": "rgb(16, 32, 58)",
+    "hint": "rgb(95, 113, 134)"
+  },
+  "errors": []
+}

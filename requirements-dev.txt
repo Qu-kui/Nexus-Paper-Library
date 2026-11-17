@@ -1,0 +1,4 @@
+# 开发 / 打包额外依赖（运行时依赖见 requirements.txt）
+pywebview>=6.0
+pyinstaller>=6.10
+pillow>=11.0

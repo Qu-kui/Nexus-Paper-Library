@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Nexus Paper Library</title>
+  <rect x="8" y="8" width="496" height="496" rx="108" fill="#6e0342"/>
+  <svg x="48" y="48" width="416" height="416" viewBox="160 70 580 510">
+    <g fill="#fff">
+      <path data-part="wing-left" d="M222 101C315 113 415 164 443 256C421 217 332 188 222 144Z"/>
+      <path data-part="wing-right" d="M443 256C462 163 567 112 672 101V144C568 183 481 212 443 256Z"/>
+      <path data-part="left-upper" d="M197 147L407 258Q425 269 425 282V375L255 245V440L197 412Z"/>
+      <path data-part="left-lower" d="M303 359L429 459V529L303 466Z"/>
+      <path data-part="right-pl" d="M454 279Q454 266 468 258L701 147V344L547 422V350Q547 339 560 332L634 297Q645 291 645 280V239Q645 224 631 231L531 278Q517 285 517 300V465L701 375V428L454 542Z"/>
+    </g>
+  </svg>
+</svg>

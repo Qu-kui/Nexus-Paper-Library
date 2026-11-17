@@ -1,0 +1,9 @@
+# 完整 N 加粗预览
+
+用户要求左半页书本身为完整的 N，后续继续增加 N 的笔画重量。本文件夹保存本轮生成预览；不是程序已经采用的图标，未覆盖生产 SVG、ICO 或安装包。
+
+生成方式：内置 image_gen 局部编辑。`npl-bold-n.png` 为最新的加粗 N 设计展示。
+
+## 最终生成提示词
+
+Precise localized logo-weight edit of this supplied NPL identity board. The user says the LEFT N is still NOT BOLD ENOUGH. Make the whole positive-space N SIGNIFICANTLY HEAVIER: use an EXTRA-BLACK / ULTRA-BOLD uppercase N, approximately 30 percent heavier than the current N. Thicken BOTH full-height vertical stems AND the complete continuous diagonal connecting stroke together. Keep the left face's existing overall width, height and isometric perspective, expanding strokes INWARD into the two open triangular negative spaces. The N must look powerful and solid, at least as heavy as the right P/L face. Keep a real conventional N: TWO full vertical stems and ONE broad diagonal from upper-left to lower-right in its own plane. Retain two SMALL OPEN triangular spaces naturally between those strokes, one opening from the top and one from the bottom, matching in size; do NOT add separate triangle holes, arrow-shaped bites or random notches. Do not merge everything into a plain solid rectangle. Do not insert a white N inside a page panel. The LEFT HALF ITSELF IS THE SOLID PURPLE N, with the N's own outer contour. Important: prioritize a CLEAR, VISIBLY MUCH BOLDER N, not a barely changed version. Keep the top curved book wings, central gutter, entire right P and aligned bottom L, colors, typography, text and layout unchanged. Make this identical strong N-weight increase in all THREE logo occurrences: the large upper-left purple mark, the WHITE reversed mark in the purple app tile, and the small purple mark at lower right. Do not change the weight of the large typeset NPL wordmark or any other text. Return the same full landscape identity board.

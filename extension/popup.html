@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <title>保存到 NPL</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header class="head">
+    <div class="brand"><img class="logo" src="icons/icon32.png" alt="" width="24" height="24"><b>NPL</b><span class="tag">Connector</span></div>
+    <button id="btn-options" class="icon" title="设置端口">⚙</button>
+  </header>
+
+  <div id="conn-state" class="conn">正在连接本机 NPL…</div>
+
+  <!-- Google Scholar 搜索结果页：勾选多条批量入库 -->
+  <section id="scholar-panel" class="hidden">
+    <div class="scholar-head">
+      <b>Google Scholar 结果</b>
+      <span id="scholar-count" class="scholar-count"></span>
+    </div>
+    <div id="scholar-list" class="scholar-list"></div>
+    <div class="scholar-actions">
+      <button id="scholar-select-all" class="ghost" type="button">全选</button>
+      <button id="scholar-select-none" class="ghost" type="button">全不选</button>
+      <button id="scholar-import" class="primary" type="button">批量入库</button>
+    </div>
+    <div id="scholar-status" class="hint"></div>
+  </section>
+
+  <main id="form" class="hidden">
+    <div id="paper-title" class="paper-title" contenteditable="true" spellcheck="false" data-placeholder="没提取到标题，点这里输入"></div>
+
+    <div class="mode-group">
+      <label class="mode">
+        <input type="radio" name="save-mode" value="archive" />
+        <span><b>直接归档</b><small>自己选归档路径，PDF 一起入库</small></span>
+      </label>
+      <label class="mode">
+        <input type="radio" name="save-mode" value="analyze" />
+        <span><b>AI 精读后归档</b><small>先精读再入库，会慢一些</small></span>
+      </label>
+    </div>
+
+    <div id="archive-path-wrap" class="hidden">
+      <label class="path-label" for="archive-path">归档到</label>
+      <select id="archive-path"></select>
+    </div>
+
+    <button id="btn-save" class="primary">保存到 NPL</button>
+    <div id="result" class="result"></div>
+    <div id="watch-hint" class="hint"></div>
+    <div id="page-hint" class="hint"></div>
+
+    <!-- 元数据仍然完整抓取并随请求提交，只是不再堆在界面上 -->
+    <div id="meta-fields" class="hidden">
+      <input id="f-title" type="text" />
+      <input id="f-authors" type="text" />
+      <input id="f-year" type="text" />
+      <input id="f-venue" type="text" />
+      <input id="f-doi" type="text" />
+      <input id="f-arxiv" type="text" />
+      <input id="f-pdf" type="text" />
+      <textarea id="f-abstract"></textarea>
+      <input id="opt-pdf" type="checkbox" checked />
+      <input id="opt-analyze" type="checkbox" />
+      <button id="btn-watch" type="button"></button>
+    </div>
+  </main>
+  <div id="error" class="error hidden"></div>
+  <div id="build-stamp" class="hint"></div>
+  <script src="popup.js"></script>
+</body>
+</html>

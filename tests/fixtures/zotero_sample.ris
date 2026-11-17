@@ -1,0 +1,13 @@
+TY  - JOUR
+TI  - Attention Is All You Need
+AU  - Vaswani, Ashish
+AU  - Shazeer, Noam
+AU  - Parmar, Niki
+PY  - 2017
+JO  - Advances in Neural Information Processing Systems
+VL  - 30
+UR  - https://arxiv.org/abs/1706.03762
+AB  - The dominant sequence transduction models are based on complex recurrent or convolutional neural networks. We propose the Transformer.
+KW  - transformer
+KW  - attention
+ER  -

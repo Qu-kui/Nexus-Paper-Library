@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui" onLoad="PWOnLoad">
+  <ribbon>
+    <tabs>
+      <tab id="PaperWhaleTab" label="NPL">
+        <group id="PWGroupCite" label="引文">
+          <button id="PWBtnInsert" label="插入引文" size="large"
+                  onAction="PWBtnInsertCitation"
+                  screentip="从 NPL 文献库检索并插入引文（可先在文档里选中文字直接检索）"/>
+          <button id="PWBtnBib" label="插入 / 更新参考文献" size="large"
+                  onAction="PWBtnInsertBibliography"
+                  screentip="按文档中引文的出现顺序生成文末参考文献；再次点击会原地更新"/>
+          <button id="PWBtnRefresh" label="刷新" size="large"
+                  onAction="PWBtnRefresh"
+                  screentip="文献库改了标题/年份，或要按文档顺序重排编号时点"/>
+        </group>
+        <group id="PWGroupConfig" label="格式与连接">
+          <button id="PWBtnStyle" label="引文格式" size="large"
+                  onAction="PWBtnStyle"
+                  screentip="APA / MLA / Chicago / IEEE / Nature / GB/T 7714"/>
+          <button id="PWBtnPort" label="端口" size="normal"
+                  onAction="PWBtnPort" screentip="修改 NPL 本机端口（默认 8765）"/>
+          <button id="PWBtnTest" label="测试连接" size="normal"
+                  onAction="PWBtnTest" screentip="检查能否连上 NPL 桌面程序"/>
+          <button id="PWBtnHelp" label="使用说明" size="normal"
+                  onAction="PWBtnHelp" screentip="怎么用这个插件"/>
+        </group>
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI>

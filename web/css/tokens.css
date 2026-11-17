@@ -1,0 +1,106 @@
+/* ==========================================================================
+   NPL · 设计令牌（2.7.42 起唯一入口）
+   --------------------------------------------------------------------------
+   规则：颜色、圆角、字号、行高只在这里定义；页面/组件文件里不要再写死。
+   例外：图标与装饰用的 emoji 尺寸（22/30/40/44px）属于图形尺寸，不进字号刻度。
+   ========================================================================== */
+
+:root {
+  /* ---- 文字与表面 ---- */
+  --ink: #10203a;
+  --ink-2: #44566f;
+  --ink-3: #5f7186;          /* 对 --bg 4.63:1、对白 5.01:1（WCAG AA） */
+  --bg: #f4f6f9;
+  --surface: #ffffff;
+  --surface-2: #f8fafc;
+  --surface-3: #f1f5f9;
+
+  /* ---- 线条与强调 ---- */
+  --line: #e2e8f0;
+  --line-soft: #eef2f7;
+  --line-strong: #cbd5e1;
+  --accent-line: #cfe9e6;
+  --accent: #0e7c86;
+  --accent-2: #14a3a3;
+  --accent-soft: #e6f4f4;
+
+  /* ---- 深色外壳（侧栏 / 标题栏 / 引注页顶栏） ---- */
+  --navy: #0b2136;
+  --navy-2: #12304c;
+  --navy-deep: #071523;
+  --chrome-text: #a9bfd4;
+  --chrome-text-strong: #dbe7f3;
+
+  /* ---- 外壳配色（随主题预设变化） ---- */
+  --shell-bg: #0b2136;
+  --shell-bg-mid: #0a1a2b;
+  --shell-bg-2: #071523;
+  --shell-bg-3: #0d2033;
+  --shell-text: #dbe7f3;
+  --shell-text-strong: #ffffff;
+  --shell-muted: #7f9ab5;
+  --shell-faint: #5d7893;
+  --shell-nav: #a9bfd4;
+  --shell-nav-strong: #e8f1fa;
+  --shell-pill-text: #9fb6ca;
+  --shell-chrome-text: #cfe0f0;
+  --shell-active-text: #ffffff;
+  --shell-line: rgba(255, 255, 255, .07);
+  --shell-line-strong: rgba(255, 255, 255, .10);
+  --shell-hover: rgba(255, 255, 255, .05);
+  --shell-hover-strong: rgba(255, 255, 255, .10);
+  --shell-hover-active: rgba(255, 255, 255, .16);
+  --shell-menu-bg: #12283d;
+  --shell-danger: #ffb4ac;
+
+  /* ---- 语义色 ---- */
+  --danger: #c0392b;
+  --warn-ink: #8a6a24;
+  --warn-bg: #fdf7e8;
+  --warn-line: #e8d3a4;
+
+  /* ---- 阴影 ---- */
+  --shadow: 0 1px 2px rgba(16, 32, 58, .04), 0 8px 24px rgba(16, 32, 58, .06);
+  --shadow-lg: 0 10px 45px rgba(16, 32, 58, .2);
+
+  /* ---- 表格行 ---- */
+  --row-alt: #e5f2ec;        /* 斑马纹交替行 */
+  --row-selected: #d7ece6;   /* 选中行 */
+
+  /* ---- 圆角 ---- */
+  --radius-sm: 4px;          /* 小徽标 */
+  --radius-chip: 6px;        /* chip / 小标签 */
+  --radius-control: 8px;     /* 输入框、按钮、列表行 */
+  --radius-card: 14px;       /* 卡片、弹窗、面板 */
+  --radius-pill: 999px;      /* 药丸 */
+  --radius: var(--radius-card);  /* 兼容旧写法 */
+
+  /* ---- 字号刻度 ---- */
+  --fs-11: 11px;             /* 微标签、徽章 */
+  --fs-12: 12px;             /* 辅助信息、表格元信息 */
+  --fs-13: 13px;             /* 正文与控件 */
+  --fs-14: 14px;             /* 强调正文 */
+  --fs-16: 16px;             /* 卡片标题、区块标题 */
+  --fs-18: 18px;             /* 空态标题 */
+  --fs-24: 24px;             /* 页面标题 */
+
+  /* ---- 行高 ---- */
+  --lh-title: 1.35;
+  --lh-ui: 1.5;
+  --lh-body: 1.65;
+
+  /* ---- 动效 ---- */
+  --dur-instant: 60ms;
+  --dur-fast: 120ms;
+  --dur-normal: 180ms;
+  --dur-moderate: 260ms;
+  --dur-slow: 340ms;
+  --ease-standard: cubic-bezier(.2, 0, 0, 1);
+  --ease-decelerate: cubic-bezier(0, 0, .2, 1);
+  --ease-accelerate: cubic-bezier(.3, 0, 1, .3);
+  --ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+
+  /* ---- 字体 ---- */
+  --mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+  --sans: -apple-system, "Segoe UI", "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+}

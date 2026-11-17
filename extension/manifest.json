@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "NPL Connector",
+  "version": "2.10.1",
+  "description": "从网页一键保存文献到 NPL，自动抓取 PDF；抓不到就按网页信息入库。",
+  "permissions": ["activeTab", "scripting", "storage", "tabs", "cookies", "webRequest", "downloads", "declarativeNetRequest", "debugger"],
+  "background": {"service_worker": "background.js"},
+  "host_permissions": ["http://127.0.0.1/*", "http://localhost/*", "<all_urls>"],
+  "action": {
+    "default_title": "保存到 NPL",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "options_page": "options.html",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

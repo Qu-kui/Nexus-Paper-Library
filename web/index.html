@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nexus Paper Library</title>
+  <script>
+    // Run before styles/body paint: only a fresh desktop launch may hide the shell.
+    (function () {
+      var startup;
+      function reveal() {
+        try {
+          if (startup && typeof startup.finish === 'function') startup.finish();
+        } catch (error) {}
+        try { delete document.documentElement.dataset.nplStartup; } catch (error) {}
+        try {
+          var overlay = document.getElementById('npl-startup');
+          if (overlay) overlay.remove();
+        } catch (error) {}
+        if (!startup) return;
+        startup.inertElements.forEach(function (element) {
+          try { element.inert = false; } catch (error) {}
+        });
+        startup.inertElements.length = 0;
+        startup.requested = false;
+      }
+      try {
+        var launchUrl = new URL(window.location.href);
+        var token = launchUrl.searchParams.get('startup');
+        if (!token || !/^[a-f0-9]{32}$/i.test(token)) return;
+        launchUrl.searchParams.delete('startup');
+        window.history.replaceState(window.history.state, '', launchUrl.pathname + launchUrl.search + launchUrl.hash);
+        var storageKey = 'npl.startup.played.' + token;
+        if (window.sessionStorage.getItem(storageKey)) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        window.sessionStorage.setItem(storageKey, '1');
+        startup = window.__NPL_STARTUP__ = { requested: true, token: token, inertElements: [] };
+        startup.failsafe = window.setTimeout(reveal, 6000);
+        document.documentElement.dataset.nplStartup = 'pending';
+      } catch (error) { reveal(); }
+    })();
+  </script>
+  <style>
+    html[data-npl-startup='pending'] body { background: #fff; }
+    html[data-npl-startup='pending'] .sidebar,
+    html[data-npl-startup='pending'] .main { visibility: hidden; }
+  </style>
+  <link rel="icon" href="/brand/npl.ico" />
+  <link rel="stylesheet" href="/css/tokens.css" />
+  <link rel="stylesheet" href="/css/startup.css" />
+  <script>
+    try {
+      var cachedLook = JSON.parse(localStorage.getItem("pw.appearance.vars") || localStorage.getItem("pw.accent.vars") || "null");
+      if (cachedLook) { var rootStyle = document.documentElement.style; for (var key in cachedLook) rootStyle.setProperty(key, cachedLook[key]); }
+    } catch (error) { /* 忽略损坏的本地缓存 */ }
+  </script>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css" />
+  <script src="/vendor/katex/katex.min.js"></script>
+  <link rel="stylesheet" href="/css/reader-enhancements.css" />
+  <link rel="stylesheet" href="/css/ai-feedback.css" />
+  <link rel="stylesheet" href="/css/answer-content.css" />
+  <link rel="stylesheet" href="/css/discovery.css" />
+  <link rel="stylesheet" href="/css/features.css" />
+  <link rel="stylesheet" href="/css/methods.css" />
+  <link rel="stylesheet" href="/css/onboarding.css" />
+  <link rel="stylesheet" href="/css/paper-notes.css" />
+</head>
+<body>
+  <svg class="svg-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-library" viewBox="0 0 16 16"><path d="M3 2.5h7.2A1.8 1.8 0 0 1 12 4.3v9.2H4.6A1.6 1.6 0 0 1 3 11.9z"/><path d="M3 12.2h9"/></symbol>
+    <symbol id="i-flask" viewBox="0 0 16 16"><path d="M6.2 2h3.6M7 2v4.1l-3.2 6a1 1 0 0 0 .9 1.4h6.6a1 1 0 0 0 .9-1.4l-3.2-6V2"/><path d="M5.4 9.2h5.2"/></symbol>
+    <symbol id="i-cards" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="4.6" height="4.6" rx="1"/><rect x="8.9" y="2.5" width="4.6" height="4.6" rx="1"/><rect x="2.5" y="8.9" width="4.6" height="4.6" rx="1"/><rect x="8.9" y="8.9" width="4.6" height="4.6" rx="1"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 16 16"><path d="M2.5 3.2h11v7.1H7.4l-3.1 3v-3H2.5z"/><path d="M5.4 6.2h5.2M5.4 8.2h3.2"/></symbol>
+    <symbol id="i-compass" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.6"/><path d="M10.4 5.6 9 8.9 5.6 10.3 7 7z"/></symbol>
+    <symbol id="i-import" viewBox="0 0 16 16"><path d="M8 2.4v7.2M5.2 7l2.8 2.8L10.8 7"/><path d="M2.8 12.4h10.4"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 16 16"><path d="M2.6 5h10.8M2.6 11h10.8"/><circle cx="6" cy="5" r="1.6"/><circle cx="10.4" cy="11" r="1.6"/></symbol>
+    <symbol id="i-news" viewBox="0 0 16 16"><path d="M2.6 3.2h8.2v9.6H4.2a1.6 1.6 0 0 1-1.6-1.6z"/><path d="M10.8 5h1.2a1.4 1.4 0 0 1 1.4 1.4v5a1.4 1.4 0 0 1-2.6.5"/><path d="M4.8 5.6h3.8M4.8 7.6h3.8M4.8 9.6h2.4"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="4.7" height="4.7" rx="1"/><rect x="8.8" y="2.5" width="4.7" height="4.7" rx="1"/><rect x="2.5" y="8.8" width="4.7" height="4.7" rx="1"/><rect x="8.8" y="8.8" width="4.7" height="4.7" rx="1"/></symbol>
+    <symbol id="i-rows" viewBox="0 0 16 16"><path d="M2.6 4.2h10.8M2.6 8h10.8M2.6 11.8h10.8"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 16 16"><rect x="5.4" y="5.4" width="7.2" height="7.2" rx="1.4"/><path d="M10.6 5.4V4.2A1.2 1.2 0 0 0 9.4 3H4.2A1.2 1.2 0 0 0 3 4.2v5.2A1.2 1.2 0 0 0 4.2 10.6h1.2"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 16 16"><path d="M8 2.6 9.3 6.7 13.4 8 9.3 9.3 8 13.4 6.7 9.3 2.6 8 6.7 6.7z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.2"/><path d="M10.2 10.2 13.4 13.4"/></symbol>
+    <symbol id="i-close" viewBox="0 0 16 16"><path d="M4.2 4.2l7.6 7.6M11.8 4.2l-7.6 7.6"/></symbol>
+  </svg>
+  <div id="app-titlebar" class="app-titlebar hidden">
+    <div class="tb-brand pywebview-drag-region">
+      <span class="tb-logo"><img src="/brand/npl-app.svg" alt="NPL" width="16" height="16"></span>
+      <span class="tb-name">Nexus Paper Library</span>
+    </div>
+    <div class="tb-menus" id="tb-menus"></div>
+    <div class="tb-drag pywebview-drag-region" id="tb-drag"></div>
+    <div class="tb-controls">
+      <button type="button" class="tb-btn" id="tb-min" title="最小化到托盘">–</button>
+      <button type="button" class="tb-btn" id="tb-max" title="最大化 / 还原">□</button>
+      <button type="button" class="tb-btn tb-close" id="tb-close" title="关闭到托盘">×</button>
+    </div>
+  </div>
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark"><img src="/brand/npl-app.svg" alt="NPL" width="38" height="38"></div>
+      <div class="brand-text">
+        <strong>NPL</strong>
+        <span>Nexus Paper Library</span>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-item active" data-page="library" aria-label="文献库" title="文献库" aria-current="page"><span class="nav-ico"><svg class="ico"><use href="#i-library"/></svg></span><span class="nav-label">文献库</span></button>
+      <button class="nav-item" data-page="methods" aria-label="方法 / 参数" title="方法 / 参数"><span class="nav-ico"><svg class="ico"><use href="#i-flask"/></svg></span><span class="nav-label">方法 / 参数</span></button>
+      <button class="nav-item" data-page="terms" aria-label="术语复习" title="术语复习"><span class="nav-ico"><svg class="ico"><use href="#i-cards"/></svg></span><span class="nav-label">术语复习</span></button>
+      <button class="nav-item" data-page="chat" aria-label="知识库问答" title="知识库问答"><span class="nav-ico"><svg class="ico"><use href="#i-chat"/></svg></span><span class="nav-label">知识库问答</span></button>
+      <button class="nav-item" data-page="research" aria-label="研究" title="研究"><span class="nav-ico"><svg class="ico"><use href="#i-spark"/></svg></span><span class="nav-label">研究</span></button>
+      <button class="nav-item" data-page="news" aria-label="资讯" title="资讯"><span class="nav-ico"><svg class="ico"><use href="#i-news"/></svg></span><span class="nav-label">资讯</span></button>
+      <button class="nav-item" data-page="discover" aria-label="发现论文" title="发现论文"><span class="nav-ico"><svg class="ico"><use href="#i-compass"/></svg></span><span class="nav-label">发现论文</span></button>
+      <button class="nav-item" data-page="import" aria-label="导入 / 添加" title="导入 / 添加"><span class="nav-ico"><svg class="ico"><use href="#i-import"/></svg></span><span class="nav-label">导入 / 添加</span></button>
+      <button class="nav-item" data-page="settings" aria-label="设置" title="设置"><span class="nav-ico"><svg class="ico"><use href="#i-settings"/></svg></span><span class="nav-label">设置</span></button>
+    </nav>
+
+    <div class="sidebar-stats" id="sidebar-stats">
+      <div><b id="stat-papers">0</b><span>论文</span></div>
+      <div><b id="stat-annotations">0</b><span>批注</span></div>
+      <div><b id="stat-categories">0</b><span>分类</span></div>
+    </div>
+
+    <div class="sidebar-foot">
+      <button class="btn task-center-toggle" id="btn-task-center" aria-expanded="false" aria-controls="task-center"><span aria-hidden="true">◷</span>任务中心</button>
+      <div class="llm-pill" id="llm-pill" title="大模型连接状态">
+        <i class="dot"></i><span id="llm-pill-text">检查模型…</span>
+      </div>
+      <div class="mini">数据全部保存在本机</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- ================= 文献库 ================= -->
+    <section class="page active" data-page="library">
+      <header class="page-head">
+        <div>
+          <h1>文献库</h1>
+          <p class="sub" id="library-sub">把论文拖进来，NPL 帮你整理。</p>
+        </div>
+        <div class="head-actions">
+          <button class="btn ghost" id="btn-analyze-all" title="批量精读：默认只读未精读的；全部读过时会询问是否全部重新精读">一键精读</button>
+          <button class="btn ghost" id="btn-fetch-pdfs" title="给没有全文的条目自动去 arXiv / 开放获取源找 PDF">补齐 PDF</button>
+          <button class="btn ghost" id="btn-refresh-library">刷新</button>
+          <button class="btn primary" id="btn-quick-upload">＋ 添加论文</button>
+        </div>
+      </header>
+
+      <div class="toolbar">
+        <div class="search-wrap">
+          <span class="search-ico"><svg class="ico"><use href="#i-search"/></svg></span>
+          <input id="library-search" type="search" placeholder="搜索标题、作者、摘要、标签…（回车）" />
+        </div>
+        <div class="category-picker" id="filter-category-wrap">
+          <input type="hidden" id="filter-category" value="" />
+          <button type="button" class="select category-picker-button" id="filter-category-button"
+                  aria-haspopup="listbox" aria-expanded="false" aria-controls="filter-category-panel"
+                  aria-label="按分类筛选">全部分类</button>
+          <div class="category-picker-panel hidden" id="filter-category-panel" role="listbox" aria-label="分类"></div>
+        </div>
+        <select id="filter-tag" class="select"><option value="">全部标签</option></select>
+        <select id="filter-sort" class="select">
+          <option value="updated">最近更新</option>
+          <option value="created">最近添加</option>
+          <option value="year">按年份</option>
+          <option value="venue">按期刊</option>
+          <option value="title">按标题</option>
+        </select>
+        <button type="button" class="btn tiny ghost missing-btn" id="btn-missing-pdf" title="只看还没有 PDF 的论文">
+          未收录 PDF <b id="missing-pdf-count">0</b>
+        </button>
+        <button type="button" class="btn tiny ghost" id="btn-category-assistant" title="和 AI 确认分类偏好，批量整理">分类助手</button>
+        <div class="view-toggle" id="view-toggle">
+          <button type="button" data-view="cards" title="卡片视图" aria-label="卡片视图"><svg class="ico"><use href="#i-grid"/></svg></button>
+          <button type="button" data-view="compact" class="active" title="紧凑列表" aria-label="紧凑列表"><svg class="ico"><use href="#i-rows"/></svg></button>
+        </div>
+      </div>
+
+      <div class="library-options">
+        <button class="btn tiny" id="btn-clear-filters">清空筛选</button>
+        <button class="btn tiny" id="btn-compare-papers" disabled>比较已选（0）</button>
+      </div>
+      <div class="setup-banner hidden" id="setup-banner">
+        <div class="setup-banner-text">
+          <b>先接上大模型</b>
+          <span>去「设置」填 Base URL 和 API Key，就能精读、问答、翻译了。</span>
+        </div>
+        <button class="btn primary tiny" id="btn-setup-go">去设置</button>
+        <button class="icon-btn" id="btn-setup-dismiss" title="稍后再说">✕</button>
+      </div>
+
+      <div class="library-split">
+        <div class="library-main">
+          <div id="paper-grid" class="paper-grid"></div>
+          <nav class="library-pagination" id="library-pagination" aria-label="文献列表分页"><button class="btn tiny" id="library-prev">上一页</button><span id="library-page-label" aria-live="polite"></span><button class="btn tiny" id="library-next">下一页</button></nav>
+          <div id="library-empty" class="empty hidden">
+            <div class="empty-mark"><img src="/brand/npl-mark.svg" alt="NPL" width="44" height="44"></div>
+            <h3>这里还是一片空海</h3>
+            <p>拖入 PDF、导入 Zotero / Obsidian 文献库，或者去「发现论文」搜一篇。</p>
+            <button class="btn primary" id="library-empty-action">去导入</button>
+          </div>
+        </div>
+        <aside class="paper-detail" id="paper-detail">
+          <div class="detail-placeholder">
+            <div class="detail-placeholder-mark">◧</div>
+            <p>点选一篇论文，这里会显示摘要、分类、PDF 缩略图。</p>
+          </div>
+        </aside>
+        <button type="button" class="detail-rail" id="btn-detail-toggle" aria-expanded="false" aria-controls="paper-detail" title="展开详情">
+          <span class="detail-rail-text">展开</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ================= 方法 / 参数 ================= -->
+    <section class="page" data-page="methods">
+      <header class="page-head">
+        <div>
+          <h1>方法 / 参数</h1>
+          <p class="sub">从论文「方法」章里抽出实验条件、器件与材料参数，跨论文可查。例如搜「1550」看别人用什么探测器。</p>
+        </div>
+        <div class="head-actions">
+          <button class="btn ghost" id="btn-methods-refresh">刷新</button>
+          <button class="btn primary" id="btn-methods-extract">提取全部</button>
+        </div>
+      </header>
+      <div class="toolbar">
+        <div class="search-wrap">
+          <span class="search-ico"><svg class="ico"><use href="#i-search"/></svg></span>
+          <input id="methods-search" type="search" placeholder="搜方法、参数名、数值（回车）" />
+        </div>
+        <select id="methods-state" class="select">
+          <option value="all">全部论文</option>
+          <option value="done">已提取</option>
+          <option value="pending">未提取</option>
+        </select>
+      </div>
+      <p class="muted small" id="methods-status" aria-live="polite"></p>
+      <div id="methods-list" class="methods-list"></div>
+    </section>
+
+    <!-- ================= 复习卡片 ================= -->
+    <section class="page" data-page="terms">
+      <header class="page-head">
+        <div>
+          <h1>术语复习</h1>
+          <p class="sub">收集论文里的缩写、术语和生词，分方向间隔复习；也可以手动添加单词。</p>
+        </div>
+        <div class="head-actions">
+          <select id="terms-paper" class="select tiny" title="提取范围"></select>
+          <button class="btn ghost" id="btn-terms-extract">提取缩写</button>
+          <button class="btn ghost" id="btn-terms-ai" title="调用模型从所选论文里抽术语（一次调用）">AI 抽取</button>
+          <button class="btn ghost" id="btn-terms-dict" title="打开程序根目录里的单词本">单词本</button>
+          <select id="terms-mode" class="select tiny" title="出题方向">
+            <option value="mixed">混合出题</option>
+            <option value="term2meaning">看术语选释义</option>
+            <option value="meaning2term">看释义／全称选术语</option>
+          </select>
+          <button class="btn primary" id="btn-terms-start">开始复习</button>
+        </div>
+      </header>
+      <p class="muted small" id="terms-stats" aria-live="polite"></p>
+      <div class="terms-extract-row" id="terms-extract-row" hidden>
+        <p class="muted small terms-extract-status" id="terms-extract-status"></p>
+        <button type="button" class="btn ghost tiny" id="btn-terms-extract-stop" hidden>停止抽取</button>
+      </div>
+      <form class="terms-add" id="terms-add-form">
+        <input id="terms-new-term" placeholder="术语 / 缩写（必填）" maxlength="120" required />
+        <input id="terms-new-expansion" placeholder="全称 / 英文展开" maxlength="400" />
+        <input id="terms-new-meaning" placeholder="中文释义（可选）" maxlength="400" />
+        <button class="btn primary" type="submit">添加</button>
+      </form>
+      <div class="terms-quiz hidden" id="terms-quiz">
+        <p class="muted small" id="terms-quiz-progress" aria-live="polite"></p>
+        <progress id="terms-progress-bar" value="0" max="1" aria-label="本轮复习进度"></progress>
+        <div class="quiz-prompt" id="terms-quiz-prompt"></div>
+        <p class="muted small" id="terms-quiz-hint"></p>
+        <div class="quiz-options" id="terms-quiz-options"></div>
+        <p class="terms-quiz-feedback" id="terms-quiz-feedback" aria-live="polite"></p>
+        <div class="quiz-actions">
+          <label class="terms-auto"><input type="checkbox" id="terms-auto-advance"> 保存后 4 秒自动下一题</label>
+          <button class="btn ghost" id="btn-terms-retry" hidden>重试保存</button>
+          <button class="btn primary" id="btn-terms-next" hidden>下一题</button>
+          <button class="btn ghost" id="btn-terms-unknown">不认识</button>
+          <button class="btn ghost" id="btn-terms-quiz-stop">结束本轮</button>
+        </div>
+      </div>
+      <p class="muted small">练习进度取两个方向较低值；双向满分为熟识，7 天后仍会维护复习。模糊回答给较少积分，不能单独达到熟识。</p>
+      <div class="terms-list-toolbar">
+        <input type="search" id="terms-search" aria-label="搜索术语、释义或别名" placeholder="搜索术语、释义或别名">
+        <span id="terms-list-count" aria-live="polite"></span>
+        <button type="button" class="btn ghost tiny" id="terms-prev">上一页</button>
+        <button type="button" class="btn ghost tiny" id="terms-more">下一页</button>
+      </div>
+      <div id="terms-list" class="terms-list"></div>
+    </section>
+
+    <!-- ================= 知识库问答 ================= -->
+    <section class="page" data-page="chat">
+      <header class="page-head">
+        <div>
+          <h1>知识库问答</h1>
+            <p class="sub">独立保存全库对话，跨论文检索与比较；回答使用最近对话和本轮证据。</p>
+        </div>
+        <div class="head-actions">
+          <button class="btn ghost" id="btn-clear-chat">清空对话</button>
+        </div>
+      </header>
+      <div class="kb-layout">
+        <aside class="kb-files">
+          <div class="kb-files-head">
+            <b>知识库文件</b>
+            <span id="kb-file-count"></span>
+          </div>
+          <input id="kb-file-search" class="kb-search" type="search" placeholder="筛选文件…" />
+          <div id="kb-file-list" class="kb-file-list">
+            <div class="kb-empty">加载中…</div>
+          </div>
+        </aside>
+        <div class="chat-shell">
+          <div id="chat-messages" class="chat-messages">
+            <div class="chat-hint">
+              <div class="hint-mark"><img src="/brand/npl-mark.svg" alt="NPL" width="40" height="40"></div>
+              <p>试试问我：</p>
+              <div class="hint-chips">
+                <button class="chip">我的文献库里关于 XXX 的主要结论是什么？</button>
+                <button class="chip">把最近读的几篇论文做个方法对比</button>
+                <button class="chip">这些工作里还有哪些空白可以切入？</button>
+              </div>
+            </div>
+          </div>
+          <div class="chat-compose">
+            <textarea id="chat-input" rows="2" placeholder="基于我的文献库提问…（Enter 发送，Shift+Enter 换行）"></textarea>
+            <button class="btn primary" id="btn-chat-send">发送</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 发现论文 ================= -->
+    <!-- ================= 研究 ================= -->
+    <section class="page" data-page="research">
+      <header class="page-head">
+        <div>
+          <h1>研究</h1>
+          <p class="sub">把文献库里的论文变成能用的东西：选多篇梳理论文脉络，选单篇做投稿匹配。</p>
+        </div>
+        <div class="head-actions">
+          <button class="btn ghost" id="btn-research-refresh">刷新论文</button>
+        </div>
+      </header>
+      <div class="toolbar research-toolbar">
+        <div class="research-tabs">
+          <button class="btn active" data-research-mode="map">研究脉络梳理</button>
+          <button class="btn" data-research-mode="journal">投稿匹配</button>
+        </div>
+        <div class="search-wrap">
+          <span class="search-ico"><svg class="ico"><use href="#i-search"/></svg></span>
+          <input id="research-search" type="search" placeholder="搜标题、作者、期刊、分类" />
+        </div>
+        <select id="research-category" class="select" aria-label="按分类筛选"></select>
+        <button class="btn ghost" id="btn-research-selectall">选满 20 篇</button>
+        <button class="btn ghost" id="btn-research-clear">清空</button>
+        <span class="muted small" id="research-count"></span>
+      </div>
+      <p class="muted small" id="research-hint" aria-live="polite"></p>
+      <div id="research-papers" class="research-papers"></div>
+      <div class="research-actions">
+        <button class="btn primary" id="btn-research-run" disabled>梳理脉络</button>
+        <span class="muted small" id="research-status" aria-live="polite"></span>
+        <span class="spacer"></span>
+        <button class="btn ghost" id="btn-research-copy">复制结果</button>
+      </div>
+      <div id="research-output" class="markdown research-output"></div>
+    </section>
+
+    <section class="page" data-page="news">
+      <header class="page-head">
+        <div>
+          <h1>资讯</h1>
+          <p class="sub">站点源 + 关注方向：抓到的站点集中管理，条目自动翻译并打分。</p>
+        </div>
+        <div class="head-actions">
+          <button class="btn ghost" id="btn-news-topics" type="button">关注方向 <span id="news-topic-count"></span></button>
+          <button class="btn ghost" id="btn-news-sources" type="button">站点源 <span id="news-source-count"></span></button>
+          <button class="btn ghost" id="btn-news-refresh" type="button">刷新资讯</button>
+        </div>
+      </header>
+
+      <div id="news-topics" class="news-topics" aria-live="polite"></div>
+      <div class="news-listbar">
+        <div id="news-status" class="news-status" aria-live="polite"></div>
+        <div id="news-sort" class="news-sort" role="group" aria-label="资讯排序">
+          <button type="button" class="news-sort-btn active" data-news-sort="score" aria-pressed="true">按打分</button>
+          <button type="button" class="news-sort-btn" data-news-sort="time" aria-pressed="false">按时间</button>
+        </div>
+      </div>
+      <div id="news-list" class="news-list" aria-label="按评分从高到低排列的资讯"></div>
+
+      <div id="news-sources-backdrop" class="news-sources-backdrop hidden"></div>
+      <aside id="news-sources-panel" class="news-sources-panel hidden" aria-hidden="true" aria-label="站点源">
+        <header class="news-sources-head">
+          <div>
+            <h2>站点源</h2>
+            <p id="news-sources-sub" class="muted small"></p>
+          </div>
+          <button class="btn tiny ghost" id="btn-news-sources-close" type="button" aria-label="关闭站点源">关闭</button>
+        </header>
+        <div id="news-sources-list" class="news-sources-list"></div>
+      </aside>
+
+      <div id="news-topics-backdrop" class="news-sources-backdrop hidden"></div>
+      <aside id="news-topics-panel" class="news-sources-panel hidden" aria-hidden="true" aria-label="关注方向">
+        <header class="news-sources-head">
+          <div>
+            <h2>关注方向</h2>
+            <p id="news-topics-sub" class="muted small"></p>
+          </div>
+          <button class="btn tiny ghost" id="btn-news-topics-close" type="button" aria-label="关闭关注方向">关闭</button>
+        </header>
+        <div class="news-topic-manager">
+          <div class="news-topic-form">
+            <input id="news-topic-input" type="text" maxlength="40" placeholder="添加关注方向，例如：具身智能 / 半导体 / 美食" aria-label="关注方向" />
+            <button class="btn primary" id="btn-news-add" type="button">添加方向</button>
+          </div>
+          <p class="muted small">默认方向也可以移除；新方向会自动检索最近新闻，让 AI 推荐并验证新的站点源。</p>
+        </div>
+        <div id="news-topics-list" class="news-sources-list"></div>
+      </aside>
+    </section>
+
+    <section class="page" data-page="discover">
+      <header class="page-head">
+        <div>
+          <h1>发现论文</h1>
+          <p class="sub">接收谷歌学术推送，也可以让 AI 围绕你的研究问题检索论文。</p>
+        </div>
+      </header>
+
+      <div class="card scholar-card">
+        <div class="scholar-head">
+          <div>
+            <h3>谷歌学术推送</h3>
+            <p class="muted" id="scholar-sub">连接邮箱后，每天把 Google Scholar 提醒同步到这里，可以阅读或加入文献库。</p>
+          </div>
+          <div class="scholar-actions">
+            <button class="btn tiny" id="btn-scholar-sync">同步邮件</button>
+            <button class="btn tiny ghost" id="btn-scholar-config">账号设置</button>
+          </div>
+        </div>
+        <div class="scholar-config hidden" id="scholar-config">
+          <div class="grid-2">
+            <label>邮箱<input id="scholar-email" type="text" placeholder="you@gmail.com" /></label>
+            <label>IMAP 服务器<input id="scholar-host" type="text" placeholder="imap.gmail.com" /></label>
+          </div>
+          <div class="grid-2">
+            <label>授权码 / 应用专用密码<input id="scholar-password" type="password" placeholder="Gmail 用应用专用密码；QQ/163 用授权码" /></label>
+            <label>邮件文件夹<input id="scholar-folder" type="text" placeholder="INBOX" /></label>
+          </div>
+          <label class="check"><input id="scholar-auto" type="checkbox" checked /> 每天自动同步一次</label>
+          <div class="scholar-config-actions">
+            <button class="btn primary tiny" id="btn-scholar-save">保存并测试</button>
+            <span class="muted" id="scholar-config-hint"></span>
+          </div>
+          <p class="muted small">先在 Google Scholar 左侧「创建快讯」用同一邮箱订阅。密码只保存在本机设置文件里。</p>
+        </div>
+        <div id="scholar-items" class="scholar-items"></div>
+      </div>
+
+      <div class="card discovery-card">
+        <div class="discovery-head">
+          <div><h2>AI 研究检索</h2><p>了解最新进展、查找具体论文，或梳理一个领域的发展脉络。</p></div>
+          <div class="discovery-topics"><label>研究话题<select id="discover-topic" aria-label="选择研究话题"></select></label><button class="btn tiny" id="btn-discover-new" type="button">新建话题</button><button class="btn tiny ghost" id="btn-discover-delete" type="button" title="删除话题及候选，可在回收站恢复">删除话题</button></div>
+        </div>
+        <label class="discovery-prompt-label" for="discover-input">你想研究什么？</label>
+        <textarea id="discover-input" rows="3" maxlength="8000" placeholder="例如：梳理偏振成像近一年的研究进展，找出值得读的代表论文，并说明它们解决了什么问题。"></textarea>
+        <div class="discovery-compose-foot"><div id="discover-examples" aria-label="试试这些研究请求"></div><button class="btn primary" id="btn-discover" type="button" disabled>开始研究</button></div>
+        <div class="discovery-materials">
+          <input id="discover-files" type="file" accept=".pdf,.docx,.txt,.md" multiple hidden>
+          <button id="btn-discover-attach" class="btn tiny" type="button" disabled>添加研究文件</button>
+          <button id="btn-discover-read" class="btn tiny" type="button" disabled>阅读附件</button>
+          <span class="muted small">PDF、DOCX、TXT、MD · 文件文字节选供本话题使用</span>
+          <div id="discover-materials" aria-live="polite"></div>
+        </div>
+        <p class="discovery-note">可直接用中文提问，也可以在同一话题中追问。候选论文由你决定是否入库。Ctrl / ⌘ + Enter 开始研究。</p>
+        <div id="discover-feedback"></div>
+        <div id="discover-summary"></div>
+        <div id="discover-history"></div>
+        <div class="discovery-candidates-head"><div><h3>候选论文</h3><span id="discover-count" role="status">共 0 篇</span></div><div class="discovery-list-tools"><button class="btn tiny" id="btn-discover-translate" type="button" hidden>补齐中文题名</button><label>查看<select id="discover-filter"><option value="pending">待处理</option><option value="all">全部</option><option value="added">已入库</option><option value="ignored">已忽略</option></select></label></div></div><p class="discovery-note" id="discover-translation-note" role="status"></p>
+        <div id="discover-results" class="discover-results"></div>
+      </div>
+    </section>
+
+    <!-- ================= 导入 ================= -->
+    <section class="page" data-page="import">
+      <header class="page-head">
+        <div>
+          <h1>导入 / 添加</h1>
+          <p class="sub">PDF 拖进来就行；已有的库直接整库迁移。</p>
+        </div>
+      </header>
+
+      <div class="grid-2">
+        <div class="card dropzone" id="dropzone">
+          <div class="dz-mark"><svg class="ico" style="width:26px;height:26px"><use href="#i-import"/></svg></div>
+          <h3>拖入 PDF</h3>
+          <p>支持多选，自动抽元数据、建索引</p>
+          <input type="file" id="file-input" accept="application/pdf" multiple hidden />
+          <button class="btn primary" id="btn-pick-files">选择 PDF</button>
+          <div class="dz-progress hidden" id="upload-progress"></div>
+        </div>
+
+        <div class="card">
+          <h3>导入 PDF 文件夹</h3>
+          <p class="muted">扫描一个文件夹里的 PDF：标题/DOI 能对上已有论文就补全文，对不上的自动新建条目。</p>
+          <div class="inline">
+            <input id="pdf-folder" type="text" placeholder="D:\论文\新下载的 PDF" />
+            <button class="btn" id="btn-pick-pdf-folder">选择…</button>
+          </div>
+          <button class="btn primary" id="btn-import-pdf-folder">扫描并导入</button>
+          <div class="result-box hidden" id="pdf-folder-result"></div>
+        </div>
+
+        <div class="card">
+          <h3>EndNote 论文库迁移</h3>
+          <p class="muted">在 EndNote 里 File → Export → 格式选 <b>XML</b>、勾选导出附件，导出到库旁边；这里选那个 .xml（或整个文件夹），元数据和 .Data/PDF 里的 PDF 会一起迁入。</p>
+          <div class="inline">
+            <input id="endnote-path" type="text" placeholder="D:\我的文献库\My EndNote Library.xml" />
+            <button class="btn" id="btn-pick-endnote">选择文件…</button>
+          </div>
+          <label class="muted small"><input type="checkbox" id="endnote-include-missing" checked /> 没有 PDF 的条目也导入（迁移推荐）</label>
+          <button class="btn primary" id="btn-import-endnote">开始迁移</button>
+          <div class="result-box hidden" id="endnote-result"></div>
+        </div>
+
+        <div class="card">
+          <h3>Zotero 导出文件</h3>
+          <p class="muted">迁移笔记推荐 Zotero RDF，导出时勾选「导出笔记」和「导出文件」。也支持 CSV / BibTeX / RIS 中的备注字段。</p>
+          <input type="file" id="zotero-file" accept=".csv,.bib,.ris,.rdf,.txt" hidden />
+          <button class="btn" id="btn-zotero-file">选择导出文件</button>
+          <div class="result-box hidden" id="zotero-file-result"></div>
+        </div>
+
+        <div class="card">
+          <h3>Zotero 导出文件夹</h3>
+          <p class="muted">选择含 <code>.rdf/.csv</code> 和 <code>files/</code> 的导出目录，PDF 与导出的笔记一起迁入。已有文献也能补入笔记。</p>
+          <input id="zotero-folder" type="text" placeholder="D:\Zotero\My Library" />
+          <button class="btn" id="btn-zotero-folder">导入文件夹</button>
+          <div class="result-box hidden" id="zotero-folder-result"></div>
+        </div>
+
+        <div class="card">
+          <h3>Obsidian 文献库</h3>
+          <p class="muted">扫描 vault 里的 Markdown 笔记（frontmatter 元数据）和随附 PDF。</p>
+          <input id="obsidian-folder" type="text" placeholder="D:\Obsidian\MyVault" />
+          <button class="btn" id="btn-obsidian">导入 Obsidian 库</button>
+          <div class="result-box hidden" id="obsidian-result"></div>
+        </div>
+
+        <div class="card wide">
+          <h3>DOI / arXiv / 网址</h3>
+          <p class="muted">粘贴 DOI、arXiv id 或论文链接，自动抓元数据并尝试下载 PDF。</p>
+          <div class="inline">
+            <input id="identifier-input" type="text" placeholder="10.1038/nature12373 或 2301.00001 或 https://arxiv.org/abs/…" />
+            <button class="btn primary" id="btn-identifier">添加</button>
+          </div>
+          <div class="result-box hidden" id="identifier-result"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 设置 ================= -->
+    <section class="page" data-page="settings">
+      <header class="page-head">
+        <div>
+          <h1>设置</h1>
+          <p class="sub">接上你的大模型 API，再写一段「我是谁」。</p>
+        </div>
+        <div class="head-actions">
+          <button class="btn ghost" id="btn-test-llm">测试连接</button>
+          <span id="settings-save-summary" class="muted small" aria-live="polite">设置已保存</span><button class="btn primary" id="btn-save-settings">保存全部设置</button>
+        </div>
+      </header>
+
+      <div class="settings-grid">
+        <div class="card">
+          <h3>外观</h3>
+          <p class="muted small">主题预设会整套替换侧栏、标题栏和页面底色；强调色可以再单独覆盖，保存后下次启动仍然生效。</p>
+          <label>主题预设
+            <input id="set-ui-theme" type="hidden" value="midnight" />
+          </label>
+          <div class="theme-presets" id="theme-presets" role="group" aria-label="主题预设"></div>
+          <label>强调色
+            <input id="set-ui-accent" type="color" value="#0e7c86" aria-label="强调色" />
+          </label>
+          <div class="accent-swatches" id="accent-swatches" role="group" aria-label="预设强调色"></div>
+          <button class="btn tiny ghost" id="btn-accent-reset" type="button">恢复默认配色</button>
+        </div>
+        <div class="card">
+          <h3>大模型 API</h3>
+          <p class="muted">任意 OpenAI 兼容接口：DeepSeek、OpenAI、通义、Kimi、SiliconFlow、Ollama…</p>
+          <label>Base URL
+            <input id="set-base-url" type="text" placeholder="https://api.deepseek.com/v1" />
+          </label>
+          <label>API Key
+            <input id="set-api-key" type="password" placeholder="sk-…" />
+          </label>
+          <label>模型名
+            <input id="set-model" type="text" placeholder="deepseek-chat" />
+          </label>
+          <label>深度思考模型（可选）
+            <input id="set-reasoning-model" type="text" placeholder="例如 deepseek-reasoner；留空则用上面的模型" />
+          </label>
+          <label>图像模型（可选）
+            <input id="set-vision-model" type="text" placeholder="填写同一接口下支持图片的模型；留空用主模型" />
+          </label>
+          <label>思考模式
+            <select id="set-thinking-mode" class="select">
+              <option value="on">全局开启深度思考（默认）</option>
+              <option value="auto">跟随服务端默认</option>
+              <option value="off">全部关闭（更快更省，适合轻任务）</option>
+            </select>
+          </label>
+          <label class="check"><input type="checkbox" id="set-app-api" /> 启用 DeepSeek 全家桶能力（需 api.deepseek.com + deepseek-flash）</label>
+          <label>联网搜索
+            <select id="set-web-search-mode" class="select">
+              <option value="auto">自动：优先用 DeepSeek 内置联网（推荐）</option>
+              <option value="builtin">只用 DeepSeek 内置联网</option>
+              <option value="local">只用本地搜索（ddgs / Bing）</option>
+            </select>
+          </label>
+          <label>论文文件解析
+            <select id="set-paper-file-mode" class="select">
+              <option value="scanned">仅扫描版兜底（推荐）</option>
+              <option value="always">每篇都附 PDF 原件（含图表理解，按页计费）</option>
+              <option value="off">关闭</option>
+            </select>
+          </label>
+          <label>回答上下文预算（字符，8000–400000）
+            <input id="set-context-chars" type="number" min="8000" max="400000" step="1000" placeholder="60000" />
+          </label>
+          <label class="check"><input type="checkbox" id="set-auto-summary" /> 长对话自动摘要（推荐，省上下文）</label>
+          <label>输出语言
+            <select id="set-language" class="select">
+              <option value="zh">简体中文</option>
+              <option value="en">English</option>
+              <option value="bilingual">中英双语</option>
+            </select>
+          </label>
+          <label>PDF 保存目录
+            <input id="set-pdf-dir" type="text" placeholder="留空使用默认目录；例如 D:\NPL\pdfs" />
+          </label>
+          <p class="muted small" style="margin-top:6px">当前生效：<span id="pdf-dir-effective">—</span></p>
+          <button class="btn tiny" id="btn-migrate-pdfs" style="margin-top:8px">迁移已有 PDF 到当前目录</button>
+        </div>
+
+          <div class="card">
+            <h3>PDF 获取</h3>
+            <label>OpenAlex API Key（可选）
+              <input id="set-openalex-key" type="password" autocomplete="off" placeholder="填写自己的 Key；留空保留已保存值" />
+            </label>
+            <label><input id="set-openalex-content" type="checkbox" /> 使用 OpenAlex 托管 PDF</label>
+            <p class="muted small">托管下载消耗 OpenAlex 账户额度，超出免费额度时可能产生费用。默认关闭；公开出版社和仓储链接照常尝试。</p>
+            <label>Unpaywall 联系邮箱（可选）
+              <input id="set-unpaywall-email" type="email" placeholder="用于开放副本查询，请填写真实联系邮箱" />
+            </label>
+            <label>使用登录态的浏览器
+              <select id="set-pdf-browser"><option>Edge</option><option>Chrome</option></select>
+            </label>
+            <label><input id="set-pdf-browser-session" type="checkbox" checked /> 自动使用所选浏览器的登录态</label>
+            <label>浏览器用户配置
+              <input id="set-pdf-browser-profile" list="pdf-browser-profiles" value="Default" placeholder="Default 或 Profile 1" />
+              <datalist id="pdf-browser-profiles"></datalist>
+            </label>
+            <p class="muted small">选择登录学校或出版社的那个配置；再次获取时会刷新登录态。动态页面可在浏览器完成登录或验证后使用插件保存。</p>
+          </div>
+
+          <div class="card">
+            <h3>剪贴板监听</h3>
+            <p class="muted small">在本机盯着剪贴板：复制论文 DOI / arXiv 链接，或复制一段看起来像论文题目的文字，窗口左下角会问你要不要入库。</p>
+            <label class="check"><input type="checkbox" id="set-clipboard-watch" /> 复制 DOI / arXiv 链接时提示</label>
+            <label class="check"><input type="checkbox" id="set-clipboard-title" /> 复制像论文题目的文字时也提示</label>
+            <p class="muted small">只在本机内存里比对最近几条，不写日志、不上传；不需要就关掉。</p>
+          </div>
+
+          <div class="card">
+            <h3>我的研究画像</h3>
+          <p class="muted">写给 AI 的「我是谁」：方向、课题、在做的项目、关心的问题。新论文入库后，AI 会判断它和你的工作有什么关系。</p>
+          <label>称呼
+            <input id="set-profile-name" type="text" placeholder="怎么称呼你" />
+          </label>
+          <label>研究方向 / 项目 / 关心的问题
+            <textarea id="set-profile" rows="12" placeholder="例：我在做「多模态药物筛选」，关注分子表征学习、低资源场景、可解释性；目前在做项目 X，想解决 Y 问题…"></textarea>
+          </label>
+          <div class="profile-actions">
+            <button class="btn" id="btn-save-profile">保存画像</button>
+            <button class="btn primary" id="btn-profile-ai">和 AI 聊聊，帮我写</button>
+            <span class="muted" id="profile-saved-hint"></span>
+          </div>
+        </div>
+      </div>
+      <div class="card plugins-card">
+        <h3>浏览器 / Word 插件</h3><p class="muted small">本组操作立即执行，无需保存设置。</p>
+        <p class="muted">浏览器插件负责网页一键入库；Word 插件在 Word 里插入引文与文末参考文献（像 Zotero 那样：插入引文 / 插入参考文献 / 切换格式 / 刷新）。</p>
+        <div class="plugin-row">
+          <div><b>浏览器插件</b><span class="muted" id="plugin-ext-state">检查中…</span></div>
+          <button class="btn tiny" id="btn-open-extension">打开扩展文件夹</button>
+        </div>
+        <div class="plugin-row">
+          <div><b>Word 插件</b><span class="muted" id="plugin-word-state">检查中…</span></div>
+          <div class="plugin-actions">
+            <button class="btn tiny" id="btn-install-word">安装到 Word</button>
+            <button class="btn tiny ghost" id="btn-open-word">打开 Word 加载项目录</button>
+          </div>
+        </div>
+        <p class="muted plugin-hint" id="plugin-hint"></p>
+      </div>
+
+      <div class="card about">
+        <h3>关于</h3>
+        <button type="button" class="btn" id="btn-onboarding">重新开始新手指引</button>
+        <p>Nexus Paper Library 2.10.1 · 本地优先：论文、笔记、批注都保存在本机。调用大模型和联网服务时会发送相应文本或查询。</p>
+        <button class="btn tiny" id="btn-quit-app" style="margin-top:10px">退出 NPL</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= 阅读器 ================= -->
+  <div class="reader hidden" id="reader">
+    <header class="reader-head">
+      <div class="reader-title" id="reader-title">论文</div>
+      <div class="reader-tools">
+        <div class="rt-group" id="rt-nav">
+          <span class="page-indicator">第 <input id="reader-page-input" type="number" min="1" value="1" /> / <b id="reader-page-total">1</b> 页</span>
+        </div>
+        <div class="rt-group" id="rt-search">
+          <span class="reader-search-wrap">
+            <input id="reader-search" type="search" placeholder="全文搜索…" />
+            <button class="btn tiny" id="reader-search-prev" title="上一个结果" aria-label="上一个结果">↑</button>
+            <button class="btn tiny" id="reader-search-next" title="下一个结果" aria-label="下一个结果">↓</button>
+            <span class="muted small" id="reader-search-count"></span>
+          </span>
+        </div>
+        <div class="rt-group" id="rt-co">
+          <button type="button" class="btn tiny" id="btn-co-add" title="把几篇论文放进同一组，AI 会同时读到它们">多篇共读</button>
+          <select id="reader-co-select" class="select tiny" title="切换当前显示的 PDF"></select>
+          <button type="button" class="btn tiny" id="btn-co-compare" title="左右对比两篇论文">左右对比</button>
+        </div>
+        <div class="rt-group" id="rt-actions">
+          <button class="btn tiny danger" id="reader-close">关闭</button>
+        </div>
+      </div>
+    </header>
+    <div class="reader-body">
+      <div class="pdf-scroll" id="pdf-scroll">
+        <div class="pdf-pages" id="pdf-pages"></div>
+      </div>
+      <div class="pdf-scroll pdf-scroll-side" id="pdf-scroll-side" hidden>
+        <div class="pdf-pages" id="pdf-pages-side"></div>
+      </div>
+      <aside class="reader-panel">
+        <div class="tabs" id="reader-tabs">
+          <button class="tab active" data-tab="summary">AI 精读</button>
+          <button class="tab" data-tab="chat">论文对话</button>
+          <button class="tab" data-tab="map">对话地图</button>
+          <button class="tab" data-tab="relevance">与我相关</button>
+          <button class="tab" data-tab="outline">目录</button>
+          <button class="tab" data-tab="notes">批注</button>
+          <button class="tab" data-tab="paper-notes">笔记</button>
+        </div>
+        <div class="tab-panes">
+          <div class="tab-pane active" data-pane="summary">
+            <div class="panel-actions">
+              <button class="btn primary tiny" id="btn-analyze">一键精读</button>
+              <select id="reader-category-select" class="select tiny" title="分类">
+                <option value="">未分类</option>
+              </select>
+            </div>
+            <div class="markdown" id="reader-summary">还没有精读结果。点上面的「AI 精读」开始阅读。</div>
+            <div class="keypoints" id="reader-keypoints"></div>
+            <div class="tags-row" id="reader-tags"></div>
+          </div>
+          <div class="tab-pane" data-pane="chat">
+            <div class="reader-chat-head" id="reader-chat-head" hidden>
+              <span class="reader-chat-branch-label" id="reader-chat-branch-label"></span>
+              <button class="btn tiny" id="reader-chat-back-main">回到主对话</button>
+            </div>
+            <button class="btn ghost tiny reader-archive-hint" id="reader-archive-hint" hidden>继续上次对话</button>
+            <div class="mini-chat" id="reader-chat-messages"></div>
+            <div class="reader-chat-attachments" id="reader-chat-attachments"></div>
+            <div class="mini-compose">
+              <div class="reader-chat-quote" id="reader-chat-quote" hidden></div>
+              <textarea id="reader-chat-input" rows="2" maxlength="16000" placeholder="就论文、截图或附件提问…"></textarea>
+              <div class="mini-compose-actions">
+                <button class="btn tiny" id="reader-chat-attach" title="支持 PDF、DOCX、TXT、MD（每个文件最多 25 MB）">上传文件</button>
+                <button class="btn tiny" id="reader-chat-clear">清空对话</button>
+                <button class="btn primary tiny" id="reader-chat-send">问</button>
+              </div>
+              <input id="reader-chat-file" type="file" accept=".pdf,.docx,.txt,.md" multiple hidden />
+            </div>
+          </div>
+          <div class="tab-pane" data-pane="map">
+            <div class="branch-map-head">
+              <b>对话地图</b>
+              <span class="muted small">每个卡片是一条独立线索，连线表示从哪条对话分出来的；点卡片切换过去。</span>
+              <button class="btn tiny" id="branch-map-close">回到对话</button>
+            </div>
+            <div class="reader-branch-map" id="reader-branch-map"></div>
+          </div>
+          <div class="tab-pane" data-pane="relevance">
+            <p class="muted small">基于「设置 → 我的研究画像」判断这篇论文能怎么用在你的工作里。</p>
+            <button class="btn tiny" id="btn-relevance">分析关联</button>
+            <div class="markdown" id="reader-relevance">还没有关联分析。</div>
+          </div>
+          <div class="tab-pane" data-pane="outline">
+            <div class="muted small" style="margin-bottom:8px">优先使用 PDF 目录；缺少时本机识别章节，可调整名称和页码。</div>
+            <div id="reader-outline" class="reader-outline"></div>
+          </div>
+          <div class="tab-pane" data-pane="notes">
+            <div id="reader-annotations" class="annotation-list"></div>
+            <div class="muted small">可划词或右键拖动框选 PDF 区域。单击其他位置可取消框选。</div>
+          </div>
+          <div class="tab-pane" data-pane="paper-notes"><div id="reader-paper-notes"></div></div>
+        </div>
+      </aside>
+    </div>
+    <div class="selection-toolbar hidden" id="selection-toolbar">
+      <button data-action="highlight" data-color="#ffd666" class="sel-color" style="color:#ffd666" title="黄色高亮">●</button>
+      <button data-action="highlight" data-color="#8ee6a8" class="sel-color" style="color:#8ee6a8" title="绿色高亮">●</button>
+      <button data-action="highlight" data-color="#8ec5ff" class="sel-color" style="color:#8ec5ff" title="蓝色高亮">●</button>
+      <button data-action="highlight" data-color="#ff9f9f" class="sel-color" style="color:#ff9f9f" title="红色高亮">●</button>
+      <button data-action="underline">下划线</button>
+      <button data-action="strikeout">删除线</button>
+      <button data-action="note">笔记</button>
+      <button data-action="translate">翻译</button>
+      <button data-action="explain">解释</button>
+      <button data-action="chat">追问</button>
+    </div>
+  </div>
+
+  <!-- 多篇共读选择器 -->
+  <div class="co-modal hidden" id="co-modal" role="dialog" aria-modal="true" aria-label="多篇共读">
+    <div class="co-modal-card">
+      <header>
+        <div><b>多篇共读</b><div class="muted small">最多 4 篇；AI 会同时拿到这些论文的上下文，方便组会时对照着讲。</div></div>
+        <button class="btn tiny" id="co-modal-close">关闭</button>
+      </header>
+      <input id="co-search" type="search" placeholder="搜标题、作者、分类" />
+      <div id="co-list" class="co-list"></div>
+      <footer>
+        <span class="muted small" id="co-status"></span>
+        <span class="spacer"></span>
+        <button class="btn tiny" id="co-clear">清空选择</button>
+        <button class="btn primary tiny" id="co-confirm">开始共读</button>
+      </footer>
+    </div>
+  </div>
+
+  <section class="task-center hidden" id="task-center" aria-label="任务中心"><header><h3>任务中心</h3><button class="icon-btn" id="task-center-close" aria-label="关闭任务中心">✕</button></header><p class="muted small">按批次显示结果；完成后保留记录。重试只处理该批失败项。</p><div id="task-center-content" aria-live="polite"></div></section>
+  <div class="job-progress hidden" id="job-progress" aria-live="polite"></div>
+
+  <!-- 分类确认弹窗 -->
+  <div class="modal hidden" id="category-modal">
+    <div class="modal-card">
+      <button class="modal-close" id="category-modal-close" title="关闭">✕</button>
+      <h3 id="category-modal-title">分类确认</h3>
+      <p class="muted" id="category-modal-desc"></p>
+      <div class="cat-proposal" id="cat-proposal"></div>
+      <div class="modal-actions" id="category-actions-main">
+        <button class="btn primary" id="btn-cat-approve">同意并归档</button>
+        <button class="btn" id="btn-cat-choose">选择现有分类</button>
+        <button class="btn" id="btn-cat-new">新建分类</button>
+        <button class="btn ghost" id="btn-cat-later">暂不分类</button>
+      </div>
+      <div class="cat-form hidden" id="category-existing">
+        <label>分类路径
+          <select id="cat-major-select" class="select"></select>
+        </label>
+        <button class="btn primary" id="btn-cat-existing-ok">用这个分类归档</button>
+      </div>
+      <div class="cat-form hidden" id="category-new">
+        <label>一级
+          <input id="cat-new-major" type="text" placeholder="例如：光学工程" />
+        </label>
+        <label>二级
+          <input id="cat-new-minor" type="text" placeholder="例如：偏振成像" />
+        </label>
+        <label>三级（可选）
+          <input id="cat-new-third" type="text" placeholder="例如：超分辨" />
+        </label>
+        <label>四级（可选）
+          <input id="cat-new-fourth" type="text" placeholder="例如：神经网络方法" />
+        </label>
+        <p class="muted small">支持 1-4 级；不需要那么多级就留空后面。新建后 PDF 会按整条路径归档。</p>
+        <button class="btn primary" id="btn-cat-new-ok">创建并归档</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 画像访谈弹窗 -->
+  <div class="modal hidden" id="profile-chat-modal">
+    <div class="modal-card wide">
+      <button class="modal-close" id="profile-chat-close" title="关闭">✕</button>
+      <h3>和 AI 聊聊</h3>
+      <p class="muted">聊几句方向，或直接贴课题组网站链接、上传论文，AI 阅读后会整理画像。</p>
+      <div class="profile-chat-messages" id="profile-chat-messages"></div>
+      <div class="profile-chat-compose">
+        <textarea id="profile-chat-input" rows="2" placeholder="说说方向，或直接贴课题组网站链接…（Enter 发送）"></textarea>
+        <button class="btn primary" id="profile-chat-send">发送</button>
+      </div>
+      <div class="profile-chat-tools">
+        <button class="btn tiny" id="profile-chat-attach">上传论文/文档</button>
+        <input id="profile-chat-file" type="file" accept=".pdf,.docx,.txt,.md" multiple hidden />
+        <span class="muted small" id="profile-chat-file-hint">支持 PDF / Word(.docx) / TXT · 已自动联网搜索 + 深度思考</span>
+      </div>
+      <div class="profile-chat-attachments" id="profile-chat-attachments"></div>
+      <div class="modal-actions">
+        <button class="btn tiny ghost" id="profile-chat-clear">清空对话</button>
+        <button class="btn primary hidden" id="profile-chat-apply">填入画像</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 论文右键菜单 -->
+  <div class="context-menu hidden" id="paper-context">
+    <button data-action="open">打开阅读</button>
+    <button data-action="copy-title">复制论文名</button>
+    <button data-action="reveal">在文件夹中显示</button>
+    <button data-action="edit">编辑信息…</button>
+    <button data-action="cite">复制 APA 引文</button>
+    <button data-action="lookup">联网查找原文 / 补全 DOI</button>
+    <button data-action="references">参考文献 / 被引…</button>
+    <div class="context-sep"></div>
+    <button data-action="analyze">一键精读</button>
+    <button data-action="retag">重新生成标签</button>
+    <button data-action="category">修改分类</button>
+    <div class="context-sep"></div>
+    <button data-action="delete" class="danger">删除论文</button>
+  </div>
+
+  <!-- 编辑论文信息 -->
+  <div class="modal hidden" id="paper-edit-modal">
+    <div class="modal-card wide">
+      <button class="modal-close" id="paper-edit-close" title="关闭">✕</button>
+      <h3>编辑论文信息</h3>
+      <p class="muted">改完保存，列表和详情会立即更新。</p>
+      <label>标题<input id="edit-title" type="text" /></label>
+      <div class="grid-2">
+        <label>作者<input id="edit-authors" type="text" placeholder="多位作者用 ; 分隔" /></label>
+        <label>年份<input id="edit-year" type="text" /></label>
+      </div>
+      <div class="grid-2">
+        <label>期刊 / 会议<input id="edit-venue" type="text" /></label>
+        <label>DOI<input id="edit-doi" type="text" /></label>
+      </div>
+      <div class="grid-3">
+        <label>卷<input id="edit-volume" type="text" placeholder="例如 12" /></label>
+        <label>期<input id="edit-issue" type="text" placeholder="例如 3" /></label>
+        <label>页码<input id="edit-pages" type="text" placeholder="例如 45–67" /></label>
+      </div>
+      <p class="muted small">卷/期/页码用于参考文献排版；抓取时会自动带上，也可手动补。</p>
+      <label>摘要<textarea id="edit-abstract" rows="6"></textarea></label>
+      <div class="modal-actions">
+        <button class="btn" id="paper-edit-cancel">取消</button>
+        <button class="btn primary" id="paper-edit-save">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 分类助手 -->
+  <div class="modal hidden" id="category-assistant-modal">
+    <div class="modal-card wide">
+      <button class="modal-close" id="category-assistant-close" title="关闭">✕</button>
+      <h3>分类助手</h3>
+      <p class="muted" id="category-assistant-sub">聊几句你的研究方向和分类习惯，AI 会整理出一套大类/小类偏好，确认后批量归档未分类论文。</p>
+      <div class="category-chat-messages" id="category-chat-messages">
+        <div class="chat-bubble assistant">先说说你主要研究什么方向、平时习惯怎么给论文分类？比如按「研究方向 / 器件类型 / 方法」还是按项目分。</div>
+      </div>
+      <div class="category-chat-compose">
+        <textarea id="category-chat-input" rows="2" placeholder="例如：我研究光学神经网络，希望大类少一点，小类按器件类型分…（Enter 发送）"></textarea>
+        <button class="btn primary" id="category-chat-send">发送</button>
+      </div>
+      <div class="modal-actions category-chat-actions">
+        <button class="btn tiny" id="category-chat-clear">清空分类对话</button>
+        <label class="muted small hidden" id="category-move-wrap" title="取消勾选则只改分类，不移动磁盘上的 PDF 文件">
+          <input type="checkbox" id="category-move-files" checked> PDF 跟着移到新分类目录
+        </label>
+        <span class="muted" id="category-guide-hint"></span>
+        <button class="btn primary hidden" id="btn-apply-categories">按这套偏好整理未分类论文</button>
+        <button class="btn tiny hidden" id="btn-apply-categories-all" title="按这套偏好把全部论文重新分一遍，已有分类会被覆盖">对所有论文重新分类…</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 参考文献 / 被引 外扩 -->
+  <div class="modal hidden" id="reference-modal">
+    <div class="modal-card wide">
+      <button class="modal-close" id="reference-close" title="关闭">✕</button>
+      <h3 id="reference-title">参考文献 / 被引</h3>
+      <p class="muted small" id="reference-sub">以这篇论文为起点，拉出它引用或被引的文献；已经在库里的会标出来。</p>
+      <div class="reference-tools">
+        <select id="reference-direction" class="select">
+          <option value="references">它引用的文献</option>
+          <option value="citations">引用了它的文献</option>
+        </select>
+        <label class="muted small"><input type="checkbox" id="reference-fetch-pdf" checked /> 入库后顺手找 PDF</label>
+        <button class="btn tiny" id="btn-reference-load">重新加载</button>
+      </div>
+      <p class="muted small" id="reference-status" aria-live="polite"></p>
+      <div id="reference-list" class="reference-list"></div>
+      <div class="modal-actions">
+        <button class="btn" id="reference-cancel">关闭</button>
+        <button class="btn tiny ghost" id="reference-select-all">全选新条目</button>
+        <button class="btn primary" id="btn-reference-import" disabled>入库选中（0）</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 剪贴板提示 -->
+  <div class="clipboard-prompt hidden" id="clipboard-prompt" role="status" aria-live="polite">
+    <div class="cp-text">
+      <b id="cp-kind">DOI</b>
+      <span id="cp-value"></span>
+      <em class="muted small" id="cp-hint"></em>
+    </div>
+    <div class="cp-actions">
+      <button class="btn tiny primary" id="cp-import">入库</button>
+      <button class="btn tiny ghost" id="cp-dismiss">忽略</button>
+      <button class="icon-btn" id="cp-close" title="这次不再提示">✕</button>
+    </div>
+  </div>
+
+  <div class="toasts" id="toasts" role="status" aria-live="polite" aria-atomic="false"></div>
+
+  <script type="module" src="/js/app.js"></script>
+  <script type="module" src="/js/titlebar.js"></script>
+</body>
+</html>

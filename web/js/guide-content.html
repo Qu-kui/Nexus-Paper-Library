@@ -1,0 +1,172 @@
+<article class="pw-guide">
+  <header class="pw-guide-head">
+    <div class="pw-guide-brand">
+      <span class="pw-guide-logo"><img src="/brand/npl-app.svg" alt="NPL" width="28" height="28"></span>
+      <div>
+        <h1>NPL 使用说明</h1>
+        <p>NPL · 本地优先的 AI 文献工作台</p>
+      </div>
+    </div>
+    <span class="pw-guide-version">v2.7.56</span>
+  </header>
+
+  <nav class="pw-guide-toc">
+    <a href="#g1">这是什么</a>
+    <a href="#g2">安装 / 升级</a>
+    <a href="#g3">第一次使用</a>
+    <a href="#g4">导入文献</a>
+    <a href="#g5">文献库</a>
+    <a href="#g6">AI 功能</a>
+    <a href="#g7">Word 插件</a>
+    <a href="#g8">浏览器插件</a>
+    <a href="#g9">设置</a>
+    <a href="#g10">数据与隐私</a>
+    <a href="#g11">常见问题</a>
+  </nav>
+
+  <div class="pw-guide-body">
+
+  <section id="g1">
+    <h2>一、这是什么</h2>
+    <p>本地优先的 AI 文献管理桌面程序：导入 / 下载论文、AI 精读、全库问答、方法与参数库、复习卡片、Word 引文插件。<strong>所有文献、笔记、PDF 都保存在你自己的电脑上。</strong></p>
+  </section>
+
+  <section id="g2">
+    <h2>二、安装 / 升级</h2>
+    <ol>
+      <li>双击 <code>NPL-Setup.exe</code>，选择安装目录，完成会自动启动。</li>
+      <li>SmartScreen 提示时点「更多信息」→「仍要运行」（未购买代码签名，可用 <code>SHA256SUMS.txt</code> 校验）。</li>
+      <li>静默安装：<code>NPL-Setup.exe --silent --dir "D:\Apps\NPL"</code>，可加 <code>--no-launch</code>。</li>
+      <li>便携版：解压 <code>NPL-*-portable.zip</code>，双击 exe，数据在 exe 同目录 <code>data\</code>。</li>
+      <li>升级安装会自动识别并关闭正在运行的 NPL（关不掉会强制结束；仍失败会提示你手动从托盘退出）。<strong>已打开的 Word 不会自动关，升级后请重启一次 Word。</strong></li>
+    </ol>
+  </section>
+
+  <section id="g3">
+    <h2>三、第一次使用</h2>
+    <ol>
+      <li>打开「设置」，填任意 OpenAI 兼容 API：<br>
+        DeepSeek <code>https://api.deepseek.com/v1</code> · 模型 <code>deepseek-chat</code><br>
+        OpenAI <code>https://api.openai.com/v1</code> · 模型 <code>gpt-4o-mini</code><br>
+        通义千问 <code>https://dashscope.aliyuncs.com/compatible-mode/v1</code> · 模型 <code>qwen-plus</code><br>
+        本地 Ollama <code>http://127.0.0.1:11434/v1</code> · 模型 <code>qwen2.5:14b</code></li>
+      <li>填 API Key，保存后点「测试连接」。</li>
+      <li>到「我的研究画像」写清方向和在做的项目，新论文会分析与你的关联。</li>
+      <li>往「导入 / 添加」拖 PDF，或粘贴 DOI / arXiv / 网址，或去「发现论文」检索。</li>
+      <li>从 Zotero / Obsidian 导入的条目没 PDF 时，会自动尝试补齐；也可点文献库右上角「补齐 PDF」。</li>
+    </ol>
+  </section>
+
+  <section id="g4">
+    <h2>四、导入文献</h2>
+    <ul>
+      <li><strong>拖入 PDF</strong>：自动读标题、作者、DOI，并按 DOI 补卷期页等信息。</li>
+      <li><strong>DOI / arXiv / 网址</strong>粘贴导入。</li>
+      <li><strong>批量导入</strong>：EndNote XML、RIS、BibTeX、Zotero RDF / CSV；按 DOI、arXiv ID、归一化标题判重，命中则补空字段和缺失 PDF。</li>
+      <li><strong>浏览器插件一键保存</strong>（见「浏览器插件」一节）。</li>
+      <li><strong>发现论文</strong>：用中文描述研究主题，AI 返回候选论文，可入库或忽略。</li>
+      <li><strong>剪贴板监听</strong>：复制 DOI / arXiv 链接 / 像论文题目的文字，程序自动提示。</li>
+      <li><strong>参考文献外扩</strong>：列出某篇论文的参考文献 / 引用它的文献，可批量入库并补 PDF。</li>
+    </ul>
+  </section>
+
+  <section id="g5">
+    <h2>五、文献库</h2>
+    <ul>
+      <li>左侧分类支持三级：先列第一级，点进去才展开下一级；选中父级会筛出整棵子树。</li>
+      <li>列表所有列可拖动调宽；缺 PDF 的条目可直接筛出。</li>
+      <li>右键「编辑信息」改标题、作者、年份、期刊，以及<strong>卷 / 期 / 页码</strong>。</li>
+      <li>老条目缺卷期页：设置 → 数据与存储 →「补齐卷期页」，按 DOI 批量补（只补空值）。</li>
+      <li>回收站可恢复误删；备份 / 还原入口也在设置页。</li>
+      <li>「分类助手」可只整理未分类，或对所有论文重新分类（执行前确认，可选择是否把 PDF 一起移到新分类目录），进度在任务中心。</li>
+    </ul>
+  </section>
+
+  <section id="g6">
+    <h2>六、AI 功能</h2>
+    <ul>
+      <li><strong>单篇精读</strong>：摘要、关键点、方法、结论，可追问。</li>
+      <li><strong>全库问答 / 知识库</strong>：基于你的库回答，并给出引用来源。</li>
+      <li><strong>阅读器</strong>：划词翻译 / 解释、批注、章节识别、本页 / 本节 / 批注 AI 材料。</li>
+      <li><strong>方法 / 参数库</strong>（左侧栏）：抽方法、实验参数、材料、设备；可搜索、按状态筛选、单篇或全部提取。</li>
+      <li><strong>复习卡片</strong>（左侧栏）：把论文变成「可迁移知识卡」——通用原理 / 取舍 / 适用边界，离开这篇论文也成立；支持今日待复习、按 SM-2 评分（1 放弃 / 2 困难 / 3 一般 / 4 简单）。</li>
+      <li><strong>任务中心</strong>：精读、PDF 抓取、方法提取、卡片生成、分类整理都是批次任务，显示进度、成功 / 失败数、失败原因，可「仅重试本批失败项」，重开程序也能看到历史。</li>
+    </ul>
+  </section>
+
+  <section id="g7">
+    <h2>七、Word 插件（插入引文 / 参考文献）</h2>
+    <p>安装器把模板装到 Word 的 STARTUP 目录，Word 会出现「NPL」功能区标签。<strong>装完 / 升级后请重启一次 Word。</strong></p>
+    <h3>功能区按钮</h3>
+    <ul>
+      <li><strong>插入引文</strong>：打开独立的「添加引注」网页窗口。左侧分类树（可展开 / 收起，括号里是含子类的篇数）、顶部搜索、右侧条目表（标题 / 作者 / 年份 / 期刊，白 / 浅绿交替）；滚轮正常滚动；Ctrl / Shift 多选；双击某行直接插入；Enter 插入；Esc 取消。选完点「插入引文」窗口关闭并自动插入、重排编号；点「取消」或关窗口，Word 立刻停止等待。</li>
+      <li><strong>插入 / 更新参考文献</strong>：第一次放到文末；之后点它或「刷新」原地更新，不会重复追加。</li>
+      <li><strong>刷新</strong>：库里改了信息或手动移动了引文位置，按文档顺序重排编号。</li>
+      <li><strong>引文格式</strong>：可搜索的格式列表，内置 APA / MLA / Chicago / IEEE / Nature / GB-T 7714，以及设置页里生成或导入的格式；当前格式标「← 当前」，数字型标「（数字型）」。</li>
+      <li><strong>端口</strong>：默认 8765；<strong>测试连接</strong>；<strong>使用说明</strong>。</li>
+    </ul>
+    <h3>编号规则（数字型格式）</h3>
+    <ul>
+      <li>单篇 <code>[1]</code>，两篇 <code>[1,2]</code>，连续三篇及以上折叠成 <code>[1-3]</code>；不连续如 <code>[1,2,5]</code>。</li>
+      <li>编号永远按文档先后顺序；在已有引文<strong>前面</strong>插入，后面的自动顺延（原来 <code>[1-6]</code>，前面插两篇后变 <code>[1,2] [3-8]</code>），插入后自动刷新。</li>
+      <li>引文以书签保存：不要手动删引文文字；删了重新插一次即可。</li>
+    </ul>
+    <p class="pw-note">模板位置：<code>%APPDATA%\Microsoft\Word\STARTUP\PaperWhaleMacros.dotm</code>。若 Word 提示「编译错误」，关掉报错窗口 → 那个文档不保存关闭 → 重启 Word；仍不行重新安装一次 NPL。</p>
+  </section>
+
+  <section id="g8">
+    <h2>八、浏览器插件（NPL Connector）</h2>
+    <ol>
+      <li>先启动 NPL。</li>
+      <li>Chrome 打开 <code>chrome://extensions</code>，Edge 打开 <code>edge://extensions</code>。</li>
+      <li>打开「开发者模式」→「加载已解压的扩展程序」→ 选 <code>browser-extension</code> 文件夹。</li>
+      <li>打开论文页面，点工具栏 NPL 图标，确认论文名，选「直接归档」或「AI 精读后归档」，再选分类，保存。</li>
+      <li>有 PDF 直链会一起下载，并从页面 meta 抓卷 / 期 / 页码；抓不到就只存网页信息，后台继续尝试。</li>
+      <li>升级主程序后到扩展页点一次「重新加载」。</li>
+      <li>遇到出版社「安全验证 / Preparing your download」时，按提示先手动过验证，程序不会反复重试。</li>
+    </ol>
+  </section>
+
+  <section id="g9">
+    <h2>九、设置页要点</h2>
+    <ul>
+      <li><strong>模型与 API</strong>：地址、模型名、Key、测试连接。</li>
+      <li><strong>论文抓取</strong>：并发数、单篇重试、保存后监听手动下载（15 分钟内接管）。</li>
+      <li><strong>学术邮箱</strong>：用于 Unpaywall / OpenAlex / Crossref；未填 Unpaywall 时自动复用。</li>
+      <li><strong>数据与存储</strong>：补齐卷期页、备份、还原、回收站、存储目录。</li>
+      <li><strong>引文格式</strong>：列表 + 一句话生成自定义格式 + 导入 <code>.csl</code> + 预览 + 删除。</li>
+      <li><strong>剪贴板监听</strong>：可关闭（关掉后不读剪贴板）。</li>
+      <li><strong>端口</strong>：默认 8765；改了端口 Word 插件也用「端口」按钮跟着改。</li>
+    </ul>
+  </section>
+
+  <section id="g10">
+    <h2>十、数据与隐私</h2>
+    <ul>
+      <li>程序数据：<code>%APPDATA%\PaperWhale</code>（数据库、设置、日志）。</li>
+      <li>PDF 文件：默认在「论文文件」目录（设置里可看实际路径）。</li>
+      <li>便携版数据：exe 同目录 <code>data\</code>。</li>
+      <li>只有调用大模型 / 联网补全时才发送必要文本或查询，不经过任何中转服务器。</li>
+      <li>卸载不删除数据；彻底清空请手动删除上面的目录。卸载会移除 Word 模板与快捷方式。</li>
+    </ul>
+  </section>
+
+  <section id="g11">
+    <h2>十一、常见问题</h2>
+    <dl>
+      <dt>双击没反应</dt><dd>看 <code>%APPDATA%\PaperWhale\paperwhale.log</code>。</dd>
+      <dt>端口被占用</dt><dd>程序会自动换端口；Word 里点「端口」按钮改成实际端口再「测试连接」。</dd>
+      <dt>Word 里没有 NPL 标签</dt><dd>确认 STARTUP 目录有 <code>PaperWhaleMacros.dotm</code>，重启 Word。</dd>
+      <dt>Word 提示「编译错误」</dt><dd>关掉报错窗口 → 那个文档不保存关闭 → 重启 Word；仍出现就重装一次 NPL。</dd>
+      <dt>点「插入引文」没弹窗口</dt><dd>确认默认浏览器可用、NPL 正在运行；Word 等待 240 秒，按 Esc 取消。</dd>
+      <dt>扫描版 PDF</dt><dd>没有文字层时选词、搜索和正文精读受限，可先用外部 OCR。</dd>
+      <dt>出版社下载失败</dt><dd>多半是限流 / 登录 / 人工验证，按提示手动过验证或稍后重试。</dd>
+      <dt>杀毒软件误报</dt><dd>PyInstaller 打包偶尔被误报，可加入信任。</dd>
+    </dl>
+  </section>
+
+  <footer class="pw-guide-foot">
+    <p>NPL 本体 MIT 许可；第三方组件许可见 <code>THIRD-PARTY-NOTICES.md</code> 与 <code>licenses\</code>。版本更新见程序目录 <code>docs\版本更新.md</code>。</p>
+  </footer>
+  </div>
+</article>

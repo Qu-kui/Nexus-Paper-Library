@@ -1,0 +1,6 @@
+[#32770] Microsoft Visual Basic for Applications
+  [Button] 确定
+  [Button] 帮助
+  [Static] 
+  [Static] 隐藏的模块中的编译错误:  PaperWhale。
+此错误通常会在代码与此应用程序的版本、平台或基础结构不兼容时发生。单击“帮助”以获取如何更正此错误的信息。

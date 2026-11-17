@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>PW Referer Probe</title>
+  <style>
+    body { font: 13px/1.5 "Segoe UI", "Microsoft YaHei", sans-serif; width: 460px; margin: 12px; }
+    h1 { font-size: 15px; margin: 0 0 8px; }
+    button { padding: 6px 14px; font-size: 13px; }
+    pre { background: #f5f5f5; padding: 8px; white-space: pre-wrap; word-break: break-all; max-height: 320px; overflow: auto; }
+    .hint { color: #666; }
+  </style>
+</head>
+<body>
+  <h1>PW Referer Probe</h1>
+  <p class="hint">先确保 <code>server.py</code> 在跑，再点下面按钮。结果会同时出现在服务端窗口的日志里。</p>
+  <button id="run">开始实验</button>
+  <button id="clean" title="把实验下载的文件和记录删掉">清理实验痕迹</button>
+  <pre id="out">未开始。</pre>
+  <script src="popup.js"></script>
+</body>
+</html>
