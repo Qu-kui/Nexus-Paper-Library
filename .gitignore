@@ -3,6 +3,9 @@ data/
 build/
 dist/
 *.spec
+!PaperWhale.spec
+!PaperWhale-Setup.spec
+!NPL-Setup.spec
 __pycache__/
 *.pyc
 .DS_Store
